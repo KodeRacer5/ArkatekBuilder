@@ -1,0 +1,18 @@
+
+> peptide-journal@0.1.0 dev
+> next dev
+
+  Γû▓ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ Γ£ô Starting...
+ Γ£ô Ready in 1149ms
+ Γ£ô Compiled /middleware in 95ms (122 modules)
+ Γùï Compiling / ...
+ Γ£ô Compiled / in 1773ms (1899 modules)
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\DumpStack.log.tmp'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\pagefile.sys'
+Watchpack Error (initial scan): Error: EINVAL: invalid argument, lstat 'C:\swapfile.sys'
+ GET / 200 in 2012ms
+ Γ£ô Compiled in 291ms (955 modules)

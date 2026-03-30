@@ -1,0 +1,103 @@
+@import './gruvbox-dark-theme.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --background: 222 28% 7%;
+    --background2: 222 24% 10%;
+    --foreground: 210 20% 92%;
+    --card: 222 24% 10%;
+    --card-foreground: 210 20% 92%;
+    --popover: 222 24% 10%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 43 85% 52%;
+    --primary-foreground: 222 28% 7%;
+    --secondary: 222 20% 15%;
+    --secondary-foreground: 210 20% 92%;
+    --muted: 222 20% 15%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 43 85% 52%;
+    --accent-foreground: 222 28% 7%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --positive: 142 60% 40%;
+    --positive-foreground: 0 0% 98%;
+    --border: 222 18% 18%;
+    --input: 222 18% 18%;
+    --ring: 43 85% 52%;
+    --radius: 0.375rem;
+  }
+
+  .dark {
+    --background: 222 28% 7%;
+    --background2: 222 24% 10%;
+    --foreground: 210 20% 92%;
+    --card: 222 24% 10%;
+    --card-foreground: 210 20% 92%;
+    --popover: 222 24% 10%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 43 85% 52%;
+    --primary-foreground: 222 28% 7%;
+    --secondary: 222 20% 15%;
+    --secondary-foreground: 210 20% 92%;
+    --muted: 222 20% 15%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 43 85% 52%;
+    --accent-foreground: 222 28% 7%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --positive: 142 60% 40%;
+    --positive-foreground: 0 0% 98%;
+    --border: 222 18% 18%;
+    --input: 222 18% 18%;
+    --ring: 43 85% 52%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply text-foreground;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--canvas-bg, #0c0e14) !important;
+  }
+  h1, h2, h3, .font-display { font-family: 'Playfair Display', serif; }
+  code, pre, .font-mono { font-family: 'DM Mono', monospace; }
+}
+
+@layer utilities {
+  .w-trigger {
+    width: var(--radix-popover-trigger-width);
+    max-height: var(--radix-popover-content-available-height);
+  }
+  .text-gold { color: hsl(43, 85%, 52%); }
+  .bg-gold { background-color: hsl(43, 85%, 52%); }
+  .border-gold { border-color: hsl(43, 85%, 52%); }
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.border') transparent;
+  }
+  *::-webkit-scrollbar { height: 5px; width: 5px; }
+  *::-webkit-scrollbar-track { background-color: transparent; }
+  *::-webkit-scrollbar-thumb { background-color: theme('colors.border'); }
+}
+
+.issue-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.issue-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.panel-slide-in { animation: slideInRight 0.25s ease forwards; }
+
+.react-flow__controls-button { background: var(--gb-bg-1); border-bottom: 1px solid rgba(255,255,255,0.08); }
+.react-flow__controls-button svg { fill: var(--gb-text-dim); }
+.react-flow__controls-button:hover svg { fill: var(--gb-fg-0); }

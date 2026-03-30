@@ -1,0 +1,23 @@
+{
+  "id": "tb500",
+  "name": "TB-500 Protocol Analysis",
+  "components": [
+    { "id": "input_labs", "name": "Patient Lab Panel", "type": "user", "position": { "x": 50, "y": 200 }, "properties": { "tech_stack": "CBC, CMP, IGF-1, inflammatory panel", "description": "Baseline systemic health markers" } },
+    { "id": "cx_engine", "name": "CortixEngine", "type": "api_gateway", "position": { "x": 340, "y": 200 }, "properties": { "tech_stack": "Thymosin Beta-4 simulation", "description": "Systemic vs local healing pathway analysis" } },
+    { "id": "loading", "name": "Loading Phase", "type": "api", "position": { "x": 620, "y": 80 }, "properties": { "tech_stack": "4–8 mg/week × 4–6 weeks", "description": "Initial saturation dosing schedule" } },
+    { "id": "maintenance", "name": "Maintenance Phase", "type": "api", "position": { "x": 620, "y": 200 }, "properties": { "tech_stack": "2–4 mg/week ongoing", "description": "Long-term systemic maintenance dosing" } },
+    { "id": "stacking", "name": "BPC-157 Synergy", "type": "api", "position": { "x": 620, "y": 320 }, "properties": { "tech_stack": "Systemic + local dual-axis", "description": "TB-500 (systemic) + BPC-157 (local) combination logic" } },
+    { "id": "injury_map", "name": "Injury Target Map", "type": "analytics", "position": { "x": 900, "y": 140 }, "properties": { "tech_stack": "Angiogenesis + actin upregulation", "description": "Identifies primary healing targets from patient history" } },
+    { "id": "report", "name": "Clinical Report", "type": "file_storage", "position": { "x": 1160, "y": 200 }, "properties": { "tech_stack": "PDF export", "description": "Protocol summary with injection schedule" } }
+  ],
+  "connections": [
+    { "from": "input_labs", "to": "cx_engine", "label": "lab data" },
+    { "from": "cx_engine", "to": "loading", "label": "phase 1" },
+    { "from": "cx_engine", "to": "maintenance", "label": "phase 2" },
+    { "from": "cx_engine", "to": "stacking", "label": "co-peptide" },
+    { "from": "loading", "to": "injury_map", "label": "targets" },
+    { "from": "stacking", "to": "injury_map", "label": "stack params" },
+    { "from": "injury_map", "to": "report", "label": "protocol" },
+    { "from": "maintenance", "to": "report", "label": "schedule" }
+  ]
+}

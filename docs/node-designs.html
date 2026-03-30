@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Peptide Journal — Node Design Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Audiowide&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0c0e14;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    color: #fff;
+    padding: 48px 40px 80px;
+    min-height: 100vh;
+  }
+
+  /* ── Page Header ── */
+  .page-header {
+    margin-bottom: 56px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding-bottom: 28px;
+  }
+  .page-title {
+    font-family: 'Audiowide', sans-serif;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 400;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 64px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .section-divider {
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ── Node row — shows node + spec side by side ── */
+  .node-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 48px;
+    margin-bottom: 40px;
+  }
+  .node-stage {
+    background: #111318;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 40px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 340px;
+    min-height: 140px;
+    position: relative;
+  }
+  .node-stage-label {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.18);
+  }
+
+  /* ── Spec panel ── */
+  .node-spec {
+    flex: 1;
+    padding-top: 4px;
+  }
+  .node-spec-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .node-spec-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    max-width: 360px;
+  }
+  .spec-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 420px;
+  }
+  .spec-table td {
+    font-size: 11px;
+    padding: 5px 0;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .spec-table td:first-child {
+    color: rgba(255,255,255,0.3);
+    font-weight: 500;
+    width: 120px;
+    padding-right: 16px;
+    white-space: nowrap;
+  }
+  .spec-table td:last-child {
+    color: rgba(255,255,255,0.7);
+    font-family: 'Courier New', monospace;
+    font-size: 10.5px;
+  }
+
+  /* ── Color swatches ── */
+  .swatch-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+  }
+  .swatch-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ══════════════════════════════════════════════════
+     NODE COMPONENTS — pixel-matched to React source
+  ══════════════════════════════════════════════════ */
+
+  /* ── Handle (connection point) ── */
+  .handle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #0c0e14;
+    border: 2px solid currentColor;
+    box-shadow: 0 0 8px currentColor;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  .handle-left  { left: -5px; }
+  .handle-right { right: -5px; }
+
+  /* ── PILL NODE ── */
+  .pill-node {
+    background: rgba(12,14,20,0.88);
+    border-radius: 14px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+    max-width: 240px;
+    cursor: grab;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+  }
+  .pill-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .pill-label  { font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; }
+  .pill-sub    { font-size: 9px; margin-top: 1px; }
+
+  /* ── ENGINE NODE ── */
+  .engine-node {
+    background: rgba(12,14,20,0.92);
+    border-radius: 16px;
+    min-width: 260px;
+    cursor: grab;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .engine-header {
+    padding: 12px 16px 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .engine-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .engine-title { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+  .engine-sub   { font-size: 10px; font-weight: 500; margin-top: 2px; }
+  .engine-body  { padding: 8px 16px 12px; }
+  .engine-tech  { font-size: 11px; color: rgba(255,255,255,0.55); }
+  .engine-desc  { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 3px; }
+
+  /* ── DATABASE NODE ── */
+  .db-node {
+    background: rgba(12,14,20,0.92);
+    border-radius: 12px;
+    min-width: 180px;
+    cursor: grab;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .db-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .db-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .db-label { font-size: 13px; font-weight: 600; color: #fff; }
+  .db-sub   { font-size: 9px; margin-top: 2px; }
+  .db-tech  { padding: 0 14px 8px; font-size: 10px; color: rgba(255,255,255,0.4); }
+
+  /* ── ROUTER NODE (Diamond) ── */
+  .router-outer {
+    width: 80px;
+    height: 80px;
+    transform: rotate(45deg);
+    background: rgba(12,14,20,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+  }
+  .router-inner {
+    transform: rotate(-45deg);
+    text-align: center;
+    user-select: none;
+  }
+  .router-icon  { font-size: 14px; font-weight: 800; line-height: 1; }
+  .router-label { font-size: 9px; font-weight: 700; color: #fff; white-space: nowrap; margin-top: 2px; }
+
+  /* ── OUTPUT NODE ── */
+  .output-node {
+    background: rgba(12,14,20,0.92);
+    border-radius: 10px;
+    min-width: 200px;
+    max-width: 240px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: grab;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+  }
+  .output-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .output-label { font-size: 12px; font-weight: 600; color: #fff; }
+  .output-sub   { font-size: 9px; margin-top: 1px; }
+
+  /* ── ARCH NODE ── */
+  .arch-node {
+    background: rgba(12,14,20,0.92);
+    border-radius: 14px;
+    min-width: 200px;
+    max-width: 240px;
+    cursor: grab;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .arch-header {
+    padding: 10px 12px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .arch-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+  .arch-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .arch-title { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .arch-sub   { font-size: 10px; margin-top: 1px; }
+  .arch-menu  { color: rgba(255,255,255,0.3); font-size: 16px; cursor: pointer; flex-shrink: 0; line-height: 1; }
+  .arch-body  { padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 4px; }
+  .arch-tech  { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.4; }
+  .arch-stack-label { font-size: 10px; font-weight: 600; }
+  .arch-desc  { font-size: 10px; color: rgba(255,255,255,0.35); line-height: 1.4; }
+
+  /* ── Edge Color Grid ── */
+  .edge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .edge-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .edge-line {
+    width: 48px;
+    height: 2px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .edge-line::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 4px;
+    opacity: 0.35;
+  }
+  .edge-type  { font-size: 12px; font-weight: 600; color: #fff; }
+  .edge-hex   { font-size: 10px; color: rgba(255,255,255,0.35); font-family: 'Courier New', monospace; margin-top: 2px; }
+
+  /* ── Hover states ── */
+  .pill-node:hover    { filter: brightness(1.1); }
+  .engine-node:hover  { filter: brightness(1.08); }
+  .db-node:hover      { filter: brightness(1.08); }
+  .output-node:hover  { filter: brightness(1.08); }
+  .arch-node:hover    { filter: brightness(1.1); }
+  .router-outer:hover { filter: brightness(1.12); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-title">Peptide Journal — Node Design Templates</div>
+  <div class="page-sub">6 node types · exact styling from research/page.jsx · updated March 14 2026</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     1. PILL NODE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">01 — Pill Node</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage">
+      <span class="node-stage-label">Live Preview</span>
+      <!-- Purple variant -->
+      <div class="pill-node" style="border: 1.5px solid #a855f777; box-shadow: 0 0 16px #a855f720, 0 2px 10px rgba(0,0,0,0.5); margin-right: 24px;">
+        <div class="handle handle-left" style="color: #a855f7; box-shadow: 0 0 8px #a855f766;"></div>
+        <div class="handle handle-right" style="color: #a855f7; box-shadow: 0 0 8px #a855f766;"></div>
+        <div class="pill-icon" style="background: #a855f718; border: 1px solid #a855f744; color: #a855f7;">Rx</div>
+        <div>
+          <div class="pill-label">BPC-157</div>
+          <div class="pill-sub" style="color: #a855f799;">Tissue Repair Peptide</div>
+        </div>
+      </div>
+      <!-- Cyan variant -->
+      <div class="pill-node" style="border: 1.5px solid #22d3ee77; box-shadow: 0 0 16px #22d3ee20, 0 2px 10px rgba(0,0,0,0.5);">
+        <div class="handle handle-left" style="color: #22d3ee; box-shadow: 0 0 8px #22d3ee66;"></div>
+        <div class="handle handle-right" style="color: #22d3ee; box-shadow: 0 0 8px #22d3ee66;"></div>
+        <div class="pill-icon" style="background: #22d3ee18; border: 1px solid #22d3ee44; color: #22d3ee;">TB</div>
+        <div>
+          <div class="pill-label">TB-500</div>
+          <div class="pill-sub" style="color: #22d3ee99;">Systemic Recovery</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="node-spec">
+      <div class="node-spec-name">Pill Node</div>
+      <div class="node-spec-desc">Compact single-row node for individual peptides. Icon box + label + subtitle. Same width as all other nodes (200–240px). Shape variety comes from border-radius and glow color, not size.</div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>pill</td></tr>
+        <tr><td>minWidth</td><td>200px</td></tr>
+        <tr><td>maxWidth</td><td>240px</td></tr>
+        <tr><td>borderRadius</td><td>14px</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.88)</td></tr>
+        <tr><td>border</td><td>1.5px solid {color}77</td></tr>
+        <tr><td>icon size</td><td>26×26px, radius 6px</td></tr>
+        <tr><td>label font</td><td>12px / 600</td></tr>
+        <tr><td>sub font</td><td>9px / {color}99</td></tr>
+        <tr><td>handles</td><td>Left (target) + Right (source)</td></tr>
+        <tr><td>use case</td><td>Individual peptides, simple I/O nodes</td></tr>
+      </table>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#a855f7;"></div>#a855f7 purple</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#22d3ee;"></div>#22d3ee cyan</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#f97316;"></div>#f97316 orange</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#22c55e;"></div>#22c55e green</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     2. ENGINE NODE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">02 — Engine Node</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage" style="min-width: 380px;">
+      <span class="node-stage-label">Live Preview</span>
+      <div class="engine-node" style="border: 2px solid #ec489988; box-shadow: 0 0 30px #ec489920, 0 0 60px #ec489908, 0 6px 24px rgba(0,0,0,0.5);">
+        <div class="handle handle-left" style="color: #ec4899; box-shadow: 0 0 8px #ec489966; top: 32px;"></div>
+        <div class="handle handle-right" style="color: #ec4899; box-shadow: 0 0 8px #ec489966; top: 32px;"></div>
+        <div class="engine-header" style="border-bottom: 1px solid #ec489922;">
+          <div class="engine-icon" style="background: #ec489915; border: 1.5px solid #ec489955; color: #ec4899;">Cx</div>
+          <div>
+            <div class="engine-title">CortixEngine</div>
+            <div class="engine-sub" style="color: #ec4899bb;">Analytical Core</div>
+          </div>
+        </div>
+        <div class="engine-body">
+          <div class="engine-tech">OpenRouter · Claude · LiteLLM</div>
+          <div class="engine-desc">Multi-model inference with RAG pipeline and protocol synthesis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="node-spec">
+      <div class="node-spec-name">Engine Node</div>
+      <div class="node-spec-desc">Large, prominent node for the central processing hub. Two-section layout: header (icon + title + subtitle) and body (tech stack + description). Most visually prominent node in any graph.</div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>engine</td></tr>
+        <tr><td>minWidth</td><td>260px</td></tr>
+        <tr><td>borderRadius</td><td>16px</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.92)</td></tr>
+        <tr><td>border</td><td>2px solid {color}88</td></tr>
+        <tr><td>icon size</td><td>38×38px, radius 10px</td></tr>
+        <tr><td>icon font</td><td>14px / 800</td></tr>
+        <tr><td>title font</td><td>15px / 700</td></tr>
+        <tr><td>divider</td><td>1px solid {color}22</td></tr>
+        <tr><td>tech font</td><td>11px / rgba(255,255,255,0.55)</td></tr>
+        <tr><td>desc font</td><td>10px / rgba(255,255,255,0.30)</td></tr>
+        <tr><td>glow</td><td>30px + 60px double halo</td></tr>
+        <tr><td>use case</td><td>CortixEngine, API Gateway, central hubs</td></tr>
+      </table>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#ec4899;"></div>#ec4899 pink (CortixEngine)</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#6366f1;"></div>#6366f1 indigo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     3. DATABASE NODE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">03 — Database Node</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage" style="gap: 20px; flex-wrap: wrap;">
+      <span class="node-stage-label">Live Preview</span>
+      <!-- Amber variant -->
+      <div class="db-node" style="border: 1.5px solid #f59e0b77; box-shadow: 0 0 24px #f59e0b18, 0 4px 16px rgba(0,0,0,0.5);">
+        <div class="handle handle-left" style="color: #f59e0b; box-shadow: 0 0 8px #f59e0b66; top: 27px;"></div>
+        <div class="handle handle-right" style="color: #f59e0b; box-shadow: 0 0 8px #f59e0b66; top: 27px;"></div>
+        <div class="db-header">
+          <div class="db-icon" style="background: #f59e0b12; border: 1.5px solid #f59e0b44; color: #f59e0b;">DB</div>
+          <div>
+            <div class="db-label">Hormone DB</div>
+            <div class="db-sub" style="color: #f59e0b99;">Vector Database</div>
+          </div>
+        </div>
+        <div class="db-tech">Qdrant · pgvector · 1.2M vectors</div>
+      </div>
+      <!-- Blue variant -->
+      <div class="db-node" style="border: 1.5px solid #3b82f677; box-shadow: 0 0 24px #3b82f618, 0 4px 16px rgba(0,0,0,0.5);">
+        <div class="handle handle-left" style="color: #3b82f6; box-shadow: 0 0 8px #3b82f666; top: 27px;"></div>
+        <div class="handle handle-right" style="color: #3b82f6; box-shadow: 0 0 8px #3b82f666; top: 27px;"></div>
+        <div class="db-header">
+          <div class="db-icon" style="background: #3b82f612; border: 1.5px solid #3b82f644; color: #3b82f6;">Ev</div>
+          <div>
+            <div class="db-label">Evidence Base</div>
+            <div class="db-sub" style="color: #3b82f699;">Document Store</div>
+          </div>
+        </div>
+        <div class="db-tech">S3 · 847 publications indexed</div>
+      </div>
+    </div>
+
+    <div class="node-spec">
+      <div class="node-spec-name">Database Node</div>
+      <div class="node-spec-desc">Rounded rectangle with prominent icon box. Two sections: header (icon + label + subtitle) and optional footer (tech stack). Visually distinct from pill via heavier icon and two-row body.</div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>database</td></tr>
+        <tr><td>minWidth</td><td>180px</td></tr>
+        <tr><td>borderRadius</td><td>12px</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.92)</td></tr>
+        <tr><td>border</td><td>1.5px solid {color}77</td></tr>
+        <tr><td>icon size</td><td>34×34px, radius 8px</td></tr>
+        <tr><td>icon font</td><td>12px / 800</td></tr>
+        <tr><td>label font</td><td>13px / 600</td></tr>
+        <tr><td>sub font</td><td>9px / {color}99</td></tr>
+        <tr><td>tech footer</td><td>10px / rgba(255,255,255,0.40)</td></tr>
+        <tr><td>use case</td><td>Vector DB, document store, data sources</td></tr>
+      </table>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#f59e0b;"></div>#f59e0b amber</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#3b82f6;"></div>#3b82f6 blue</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#10b981;"></div>#10b981 emerald</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     4. ROUTER NODE (Diamond)
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">04 — Router Node</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage" style="gap: 32px; min-height: 160px;">
+      <span class="node-stage-label">Live Preview</span>
+      <!-- Cyan SPLIT -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <div class="router-outer" style="border: 2px solid #06b6d488; box-shadow: 0 0 24px #06b6d425, 0 0 50px #06b6d408;">
+          <div class="handle" style="color: #06b6d4; box-shadow: 0 0 8px #06b6d466; position: absolute; left: -5px; top: 50%; transform: translateY(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color: #06b6d4; box-shadow: 0 0 8px #06b6d466; position: absolute; right: -5px; top: 50%; transform: translateY(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color: #06b6d4; box-shadow: 0 0 8px #06b6d466; position: absolute; top: -5px; left: 50%; transform: translateX(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color: #06b6d4; box-shadow: 0 0 8px #06b6d466; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(-45deg);"></div>
+          <div class="router-inner">
+            <div class="router-icon" style="color: #06b6d4;">S</div>
+            <div class="router-label">SPLIT</div>
+          </div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.25); letter-spacing: 0.08em;">SPLIT · #06b6d4</div>
+      </div>
+      <!-- Purple MERGE -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <div class="router-outer" style="border: 2px solid #a855f788; box-shadow: 0 0 24px #a855f725, 0 0 50px #a855f708;">
+          <div class="handle" style="color: #a855f7; box-shadow: 0 0 8px #a855f766; position: absolute; left: -5px; top: 50%; transform: translateY(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color: #a855f7; box-shadow: 0 0 8px #a855f766; position: absolute; right: -5px; top: 50%; transform: translateY(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color: #a855f7; box-shadow: 0 0 8px #a855f766; position: absolute; top: -5px; left: 50%; transform: translateX(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color: #a855f7; box-shadow: 0 0 8px #a855f766; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(-45deg);"></div>
+          <div class="router-inner">
+            <div class="router-icon" style="color: #a855f7;">M</div>
+            <div class="router-label">MERGE</div>
+          </div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.25); letter-spacing: 0.08em;">MERGE · #a855f7</div>
+      </div>
+    </div>
+
+    <div class="node-spec">
+      <div class="node-spec-name">Router Node</div>
+      <div class="node-spec-desc">Diamond shape via 45deg CSS rotation. 4 connection handles (L/R/T/B), all counter-rotated -45deg. Content inside counter-rotated to stay upright. Used for SPLIT and MERGE junctions in the pipeline.</div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>router</td></tr>
+        <tr><td>size</td><td>80×80px (fixed square, rotated)</td></tr>
+        <tr><td>transform</td><td>rotate(45deg) on outer div</td></tr>
+        <tr><td>inner</td><td>rotate(-45deg) to keep text upright</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.92)</td></tr>
+        <tr><td>border</td><td>2px solid {color}88</td></tr>
+        <tr><td>handles</td><td>4 — Left, Right, Top (id=top), Bottom (id=bottom)</td></tr>
+        <tr><td>handle offset</td><td>-6px from edge (not -5px, allows for rotation)</td></tr>
+        <tr><td>icon font</td><td>14px / 800 / {color}</td></tr>
+        <tr><td>label font</td><td>9px / 700 / #fff</td></tr>
+        <tr><td>use case</td><td>SPLIT, MERGE, routing junctions</td></tr>
+      </table>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#06b6d4;"></div>#06b6d4 cyan (SPLIT)</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#a855f7;"></div>#a855f7 purple (MERGE)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     5. OUTPUT NODE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">05 — Output Node</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage" style="gap: 20px; flex-wrap: wrap;">
+      <span class="node-stage-label">Live Preview</span>
+      <!-- Cyan protocol report -->
+      <div class="output-node" style="border: 1.5px solid #22d3ee66; box-shadow: 0 0 20px #22d3ee15, 0 4px 16px rgba(0,0,0,0.4);">
+        <div class="handle handle-left" style="color: #22d3ee; box-shadow: 0 0 8px #22d3ee66;"></div>
+        <div class="handle handle-right" style="color: #22d3ee; box-shadow: 0 0 8px #22d3ee66;"></div>
+        <div class="output-icon" style="background: #22d3ee15; border: 1px solid #22d3ee44; color: #22d3ee;">Px</div>
+        <div>
+          <div class="output-label">12-Week Protocol</div>
+          <div class="output-sub" style="color: #22d3ee88;">PDF Report · Auto-generated</div>
+        </div>
+      </div>
+      <!-- Green dosing matrix -->
+      <div class="output-node" style="border: 1.5px solid #22c55e66; box-shadow: 0 0 20px #22c55e15, 0 4px 16px rgba(0,0,0,0.4);">
+        <div class="handle handle-left" style="color: #22c55e; box-shadow: 0 0 8px #22c55e66;"></div>
+        <div class="handle handle-right" style="color: #22c55e; box-shadow: 0 0 8px #22c55e66;"></div>
+        <div class="output-icon" style="background: #22c55e15; border: 1px solid #22c55e44; color: #22c55e;">D</div>
+        <div>
+          <div class="output-label">Dosing Matrix</div>
+          <div class="output-sub" style="color: #22c55e88;">Vial Math · Cost Estimate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="node-spec">
+      <div class="node-spec-name">Output Node</div>
+      <div class="node-spec-desc">Compact icon-box node for terminal outputs — reports, protocols, exports. Similar layout to Pill but with slightly different border opacity (66 vs 77) and min-width at 200px. Signals end-of-pipeline visually.</div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>output</td></tr>
+        <tr><td>minWidth</td><td>200px</td></tr>
+        <tr><td>maxWidth</td><td>240px</td></tr>
+        <tr><td>borderRadius</td><td>10px (tighter than pill's 14px)</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.92)</td></tr>
+        <tr><td>border</td><td>1.5px solid {color}66 (softer than pill)</td></tr>
+        <tr><td>icon size</td><td>28×28px, radius 6px</td></tr>
+        <tr><td>icon font</td><td>11px / 700</td></tr>
+        <tr><td>label font</td><td>12px / 600</td></tr>
+        <tr><td>sub font</td><td>9px / {color}88</td></tr>
+        <tr><td>handles</td><td>Left (target) + Right (source)</td></tr>
+        <tr><td>use case</td><td>Protocol PDF, dosing matrix, clinical report, shopping cart</td></tr>
+      </table>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#22d3ee;"></div>#22d3ee cyan</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#22c55e;"></div>#22c55e green</div>
+        <div class="swatch"><div class="swatch-dot" style="background:#f97316;"></div>#f97316 orange</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     6. ARCH NODE
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">06 — Arch Node</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage" style="min-width: 380px; gap: 20px; flex-wrap: wrap;">
+      <span class="node-stage-label">Live Preview</span>
+      <!-- Teal peptide arch -->
+      <div class="arch-node" style="border: 1.5px solid #14b8a688; box-shadow: 0 0 20px #14b8a615, 0 4px 20px rgba(0,0,0,0.5);">
+        <div class="handle handle-left" style="color: #14b8a6; box-shadow: 0 0 8px #14b8a666; top: 28px;"></div>
+        <div class="handle handle-right" style="color: #14b8a6; box-shadow: 0 0 8px #14b8a666; top: 28px;"></div>
+        <div class="arch-header" style="border-bottom: 1px solid #14b8a622;">
+          <div class="arch-header-left">
+            <div class="arch-icon" style="background: #14b8a615; border: 1px solid #14b8a644; color: #14b8a6;">CJ</div>
+            <div style="overflow: hidden;">
+              <div class="arch-title">CJC-1295</div>
+              <div class="arch-sub" style="color: #14b8a6aa;">GH Secretagogue</div>
+            </div>
+          </div>
+          <div class="arch-menu">⋮</div>
+        </div>
+        <div class="arch-body">
+          <div class="arch-tech"><span class="arch-stack-label" style="color: #14b8a688;">Stack: </span>100mcg/injection · 2×/week</div>
+          <div class="arch-desc">GHRH analogue — extended half-life variant. Stacks with Ipamorelin for pulsatile GH release</div>
+        </div>
+      </div>
+      <!-- Orange peptide arch -->
+      <div class="arch-node" style="border: 1.5px solid #f9731688; box-shadow: 0 0 20px #f9731615, 0 4px 20px rgba(0,0,0,0.5);">
+        <div class="handle handle-left" style="color: #f97316; box-shadow: 0 0 8px #f9731666; top: 28px;"></div>
+        <div class="handle handle-right" style="color: #f97316; box-shadow: 0 0 8px #f9731666; top: 28px;"></div>
+        <div class="arch-header" style="border-bottom: 1px solid #f9731622;">
+          <div class="arch-header-left">
+            <div class="arch-icon" style="background: #f9731615; border: 1px solid #f9731644; color: #f97316;">Ip</div>
+            <div style="overflow: hidden;">
+              <div class="arch-title">Ipamorelin</div>
+              <div class="arch-sub" style="color: #f97316aa;">GHRP / Ghrelin Mimic</div>
+            </div>
+          </div>
+          <div class="arch-menu">⋮</div>
+        </div>
+        <div class="arch-body">
+          <div class="arch-tech"><span class="arch-stack-label" style="color: #f9731688;">Stack: </span>200mcg/injection · 3×/week</div>
+          <div class="arch-desc">Selective GH secretagogue. Minimal cortisol or prolactin elevation vs GHRP-2/6</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="node-spec">
+      <div class="node-spec-name">Arch Node</div>
+      <div class="node-spec-desc">Full-detail node — the most information-dense type. Header section (icon + title + subtitle + 3-dot menu) separated by divider, then body (tech stack + description). Used for rich peptide profiles and complex system components.</div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>arch</td></tr>
+        <tr><td>minWidth</td><td>200px</td></tr>
+        <tr><td>maxWidth</td><td>240px</td></tr>
+        <tr><td>borderRadius</td><td>14px</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.92)</td></tr>
+        <tr><td>border</td><td>1.5px solid {color}88</td></tr>
+        <tr><td>icon size</td><td>32×32px, radius 8px</td></tr>
+        <tr><td>icon font</td><td>13px / 800</td></tr>
+        <tr><td>title font</td><td>13px / 600 / truncate overflow</td></tr>
+        <tr><td>sub font</td><td>10px / {color}aa</td></tr>
+        <tr><td>3-dot menu</td><td>⋮ · rgba(255,255,255,0.3) · clickable</td></tr>
+        <tr><td>divider</td><td>1px solid {color}22</td></tr>
+        <tr><td>stack label</td><td>10px / 600 / {color}88</td></tr>
+        <tr><td>tech font</td><td>11px / rgba(255,255,255,0.60)</td></tr>
+        <tr><td>desc font</td><td>10px / rgba(255,255,255,0.35)</td></tr>
+        <tr><td>handles</td><td>Left (target) + Right (source)</td></tr>
+        <tr><td>known issue</td><td>icon fallback '\u{2699}' must be changed to 'N'</td></tr>
+        <tr><td>use case</td><td>Detailed peptide profiles, complex services</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     EDGE COLOR MAP
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Edge Color Map</span>
+    <div class="section-divider"></div>
+  </div>
+  <div style="font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 18px; max-width: 540px; line-height: 1.6;">
+    Edges are color-coded by flow type. Each edge uses <code style="color:rgba(255,255,255,0.6); font-family:'Courier New',monospace;">edgeColor</code> key in the JSON template to pick from this map. strokeWidth: 1.2, stroke-dasharray: 5 3, animation: 1.8s.
+  </div>
+  <div class="edge-grid">
+    <div class="edge-card">
+      <div><div class="edge-line" style="background:#f97316; box-shadow: 0 0 6px #f9731660;"></div></div>
+      <div><div class="edge-type">data</div><div class="edge-hex">#f97316 · orange</div></div>
+    </div>
+    <div class="edge-card">
+      <div><div class="edge-line" style="background:#ec4899; box-shadow: 0 0 6px #ec489960;"></div></div>
+      <div><div class="edge-type">analysis</div><div class="edge-hex">#ec4899 · pink</div></div>
+    </div>
+    <div class="edge-card">
+      <div><div class="edge-line" style="background:#a855f7; box-shadow: 0 0 6px #a855f760;"></div></div>
+      <div><div class="edge-type">optimize</div><div class="edge-hex">#a855f7 · purple</div></div>
+    </div>
+    <div class="edge-card">
+      <div><div class="edge-line" style="background:#ef4444; box-shadow: 0 0 6px #ef444460;"></div></div>
+      <div><div class="edge-type">safety</div><div class="edge-hex">#ef4444 · red</div></div>
+    </div>
+    <div class="edge-card">
+      <div><div class="edge-line" style="background:#22d3ee; box-shadow: 0 0 6px #22d3ee60;"></div></div>
+      <div><div class="edge-type">protocol</div><div class="edge-hex">#22d3ee · cyan</div></div>
+    </div>
+    <div class="edge-card">
+      <div><div class="edge-line" style="background:rgba(255,255,255,0.4);"></div></div>
+      <div><div class="edge-type">default</div><div class="edge-hex">rgba(255,255,255,0.4)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     QUICK REFERENCE — All nodes side by side
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Quick Reference — All Nodes</span>
+    <div class="section-divider"></div>
+  </div>
+  <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: center; padding: 36px 32px; background: #111318; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;">
+
+    <!-- Pill -->
+    <div style="display:flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div class="pill-node" style="border: 1.5px solid #a855f777; box-shadow: 0 0 16px #a855f720, 0 2px 10px rgba(0,0,0,0.5);">
+        <div class="pill-icon" style="background: #a855f718; border: 1px solid #a855f744; color: #a855f7;">Rx</div>
+        <div><div class="pill-label">BPC-157</div><div class="pill-sub" style="color:#a855f799;">Tissue Repair</div></div>
+      </div>
+      <div style="font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase;">pill</div>
+    </div>
+
+    <!-- Engine -->
+    <div style="display:flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div class="engine-node" style="border: 2px solid #ec489988; box-shadow: 0 0 30px #ec489920, 0 6px 24px rgba(0,0,0,0.5);">
+        <div class="engine-header" style="border-bottom: 1px solid #ec489922;">
+          <div class="engine-icon" style="background: #ec489915; border: 1.5px solid #ec489955; color: #ec4899;">Cx</div>
+          <div><div class="engine-title">CortixEngine</div><div class="engine-sub" style="color:#ec4899bb;">Analytical Core</div></div>
+        </div>
+        <div class="engine-body">
+          <div class="engine-tech">OpenRouter · Claude</div>
+          <div class="engine-desc">Multi-model RAG pipeline</div>
+        </div>
+      </div>
+      <div style="font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase;">engine</div>
+    </div>
+
+    <!-- Database -->
+    <div style="display:flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div class="db-node" style="border: 1.5px solid #f59e0b77; box-shadow: 0 0 24px #f59e0b18, 0 4px 16px rgba(0,0,0,0.5);">
+        <div class="db-header">
+          <div class="db-icon" style="background: #f59e0b12; border: 1.5px solid #f59e0b44; color: #f59e0b;">DB</div>
+          <div><div class="db-label">Hormone DB</div><div class="db-sub" style="color:#f59e0b99;">Vector Database</div></div>
+        </div>
+        <div class="db-tech">Qdrant · 1.2M vectors</div>
+      </div>
+      <div style="font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase;">database</div>
+    </div>
+
+    <!-- Router -->
+    <div style="display:flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div style="padding: 14px; display: flex; align-items: center; justify-content: center;">
+        <div class="router-outer" style="border: 2px solid #06b6d488; box-shadow: 0 0 24px #06b6d425, 0 0 50px #06b6d408;">
+          <div class="handle" style="color:#06b6d4; box-shadow:0 0 8px #06b6d466; position:absolute; left:-5px; top:50%; transform:translateY(-50%) rotate(-45deg);"></div>
+          <div class="handle" style="color:#06b6d4; box-shadow:0 0 8px #06b6d466; position:absolute; right:-5px; top:50%; transform:translateY(-50%) rotate(-45deg);"></div>
+          <div class="router-inner">
+            <div class="router-icon" style="color:#06b6d4;">S</div>
+            <div class="router-label">SPLIT</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase;">router</div>
+    </div>
+
+    <!-- Output -->
+    <div style="display:flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div class="output-node" style="border: 1.5px solid #22d3ee66; box-shadow: 0 0 20px #22d3ee15, 0 4px 16px rgba(0,0,0,0.4);">
+        <div class="output-icon" style="background: #22d3ee15; border: 1px solid #22d3ee44; color: #22d3ee;">Px</div>
+        <div><div class="output-label">12-Week Protocol</div><div class="output-sub" style="color:#22d3ee88;">PDF Report</div></div>
+      </div>
+      <div style="font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase;">output</div>
+    </div>
+
+    <!-- Arch -->
+    <div style="display:flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div class="arch-node" style="border: 1.5px solid #14b8a688; box-shadow: 0 0 20px #14b8a615, 0 4px 20px rgba(0,0,0,0.5);">
+        <div class="arch-header" style="border-bottom: 1px solid #14b8a622;">
+          <div class="arch-header-left">
+            <div class="arch-icon" style="background: #14b8a615; border: 1px solid #14b8a644; color: #14b8a6;">CJ</div>
+            <div style="overflow:hidden;"><div class="arch-title">CJC-1295</div><div class="arch-sub" style="color:#14b8a6aa;">GH Secretagogue</div></div>
+          </div>
+          <div class="arch-menu">⋮</div>
+        </div>
+        <div class="arch-body">
+          <div class="arch-tech"><span class="arch-stack-label" style="color:#14b8a688;">Stack: </span>100mcg · 2×/week</div>
+          <div class="arch-desc">GHRH analogue, extended half-life</div>
+        </div>
+      </div>
+      <div style="font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase;">arch</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     7. CHAIN NODE (Banner Overlay — AnalyticalChain)
+════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">07 — Chain Node · Banner Overlay</span>
+    <div class="section-divider"></div>
+  </div>
+
+  <div style="font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 22px; max-width: 600px; line-height: 1.7;">
+    These are the nodes visible in the <strong style="color:rgba(255,255,255,0.6);">hero banner canvas</strong> on the Dashboard, Bookshelf, and Lab pages.
+    Component: <code style="color:rgba(255,255,255,0.6); font-family:'Courier New',monospace;">app/_components/ui/dashboard/AnalyticalChain.jsx</code>
+    — ChainNode type only. White-outlined, emoji icons, no color variants. Loaded from
+    <code style="color:rgba(255,255,255,0.6); font-family:'Courier New',monospace;">public/templates/cortix_biohacker_chain.json</code>.
+  </div>
+
+  <div class="node-row">
+    <div class="node-stage" style="min-width: 380px; gap: 16px; flex-wrap: wrap; align-items: flex-start;">
+      <span class="node-stage-label">Live Preview — all 12 type variants</span>
+
+      <!-- All 12 ChainNode TYPE_META variants -->
+      <style>
+        .chain-node {
+          background: rgba(12,14,20,0.92);
+          border: 1.5px solid rgba(255,255,255,0.25);
+          border-radius: 14px;
+          min-width: 160px; max-width: 180px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+          font-family: -apple-system, system-ui, sans-serif;
+          cursor: grab;
+          position: relative;
+        }
+        .chain-node:hover { border-color: rgba(255,255,255,0.45); box-shadow: 0 4px 28px rgba(0,0,0,0.6); }
+        .chain-inner { padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
+        .chain-icon-box {
+          width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.15);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 14px;
+        }
+        .chain-label { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chain-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+        .chain-menu { color: rgba(255,255,255,0.3); font-size: 16px; cursor: pointer; flex-shrink: 0; }
+        .chain-handle {
+          width: 8px; height: 8px; border-radius: 50%;
+          background: #1c1f26;
+          border: 2px solid rgba(255,255,255,0.5);
+          position: absolute; top: 50%; transform: translateY(-50%);
+        }
+        .chain-handle-l { left: -4px; }
+        .chain-handle-r { right: -4px; }
+      </style>
+
+      <!-- user -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">👤</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Goal: Muscle Gain</div><div class="chain-sub">User</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- api_gateway -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">🌐</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">CJC-1295</div><div class="chain-sub">API Gateway</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- load_balancer / CortixEngine -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">⇄</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">CortixEngine</div><div class="chain-sub">Load Balancer</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- database -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">🗄</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Lab Panel</div><div class="chain-sub">Database</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- auth_service -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">🔒</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">BPC-157</div><div class="chain-sub">Auth Service</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- api -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">🌐</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">MGF</div><div class="chain-sub">API</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- analytics -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">📊</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Protocol Timeline</div><div class="chain-sub">Analytics</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- logging -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">📝</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Safety Monitor</div><div class="chain-sub">Logging</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- file_storage -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">📁</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Shopping Cart</div><div class="chain-sub">File Storage</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- cache -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">⚡</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Cache Layer</div><div class="chain-sub">Cache</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- server -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">☰</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Backend Server</div><div class="chain-sub">Server</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+      <!-- frontend -->
+      <div class="chain-node">
+        <div class="chain-handle chain-handle-l"></div>
+        <div class="chain-handle chain-handle-r"></div>
+        <div class="chain-inner">
+          <div class="chain-icon-box">📦</div>
+          <div style="overflow:hidden;flex:1;"><div class="chain-label">Next.js App</div><div class="chain-sub">Frontend</div></div>
+          <div class="chain-menu">⋮</div>
+        </div>
+      </div>
+
+    </div><!-- /node-stage -->
+
+    <div class="node-spec">
+      <div class="node-spec-name">Chain Node</div>
+      <div class="node-spec-desc">
+        Single node type used exclusively in the AnalyticalChain banner overlay. White-bordered, no color theming.
+        Type is determined by the <code style="font-family:'Courier New',monospace; font-size:11px; color:rgba(255,255,255,0.6);">type</code> field in the JSON — each type gets a different emoji icon and subtitle label via <code style="font-family:'Courier New',monospace; font-size:11px; color:rgba(255,255,255,0.6);">TYPE_META</code>.
+        Unknown types fall back to ⚙ icon.
+      </div>
+      <table class="spec-table">
+        <tr><td>type key</td><td>chain (single registered type)</td></tr>
+        <tr><td>minWidth</td><td>160px</td></tr>
+        <tr><td>maxWidth</td><td>180px</td></tr>
+        <tr><td>borderRadius</td><td>14px</td></tr>
+        <tr><td>background</td><td>rgba(12,14,20,0.92)</td></tr>
+        <tr><td>border</td><td>1.5px solid rgba(255,255,255,0.25)</td></tr>
+        <tr><td>icon box</td><td>28×28px, radius 8px, bg rgba(255,255,255,0.06), border rgba(255,255,255,0.15)</td></tr>
+        <tr><td>icon font</td><td>14px emoji (system — OK here, banner context only)</td></tr>
+        <tr><td>label font</td><td>13px / 600 / #fff / truncate</td></tr>
+        <tr><td>sub font</td><td>10px / rgba(255,255,255,0.40) — TYPE_META.label</td></tr>
+        <tr><td>3-dot menu</td><td>⋮ / rgba(255,255,255,0.30)</td></tr>
+        <tr><td>handles</td><td>Left (target) + Right (source), 8×8px, bg #1c1f26, border rgba(255,255,255,0.50)</td></tr>
+        <tr><td>edge style</td><td>stroke rgba(255,255,255,0.20), strokeWidth 1.5, smoothstep, animated 3s</td></tr>
+        <tr><td>viewport</td><td>defaultViewport x:-340, y:10, zoom:0.65</td></tr>
+        <tr><td>canvas bg</td><td>Background dot: rgba(255,255,255,0.06), gap:20</td></tr>
+        <tr><td>used in</td><td>Dashboard, Bookshelf, Lab — banner canvas only</td></tr>
+        <tr><td>template file</td><td>public/templates/cortix_biohacker_chain.json</td></tr>
+        <tr><td>NOTE</td><td>Emoji icons ARE used here (banner context only, not research canvas)</td></tr>
+      </table>
+
+      <div style="margin-top: 20px; font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;">TYPE_META map</div>
+      <table class="spec-table">
+        <tr><td>user</td><td>👤 · label: "User"</td></tr>
+        <tr><td>frontend</td><td>📦 · label: "Frontend"</td></tr>
+        <tr><td>server</td><td>☰ · label: "Server"</td></tr>
+        <tr><td>load_balancer</td><td>⇄ · label: "Load Balancer"</td></tr>
+        <tr><td>cache</td><td>⚡ · label: "Cache"</td></tr>
+        <tr><td>database</td><td>🗄 · label: "Database"</td></tr>
+        <tr><td>auth_service</td><td>🔒 · label: "Auth Service"</td></tr>
+        <tr><td>analytics</td><td>📊 · label: "Analytics"</td></tr>
+        <tr><td>api_gateway</td><td>🌐 · label: "API Gateway"</td></tr>
+        <tr><td>api</td><td>🌐 · label: "API"</td></tr>
+        <tr><td>file_storage</td><td>📁 · label: "File Storage"</td></tr>
+        <tr><td>logging</td><td>📝 · label: "Logging"</td></tr>
+        <tr><td>fallback</td><td>⚙ · label: data.type (raw string)</td></tr>
+      </table>
+
+      <div style="margin-top: 18px; padding: 12px 14px; background: rgba(255,220,0,0.05); border: 1px solid rgba(255,220,0,0.15); border-radius: 8px; font-size: 11px; color: rgba(255,220,0,0.7); line-height: 1.6;">
+        <strong>Context rule:</strong> Emoji icons are intentional and OK in ChainNode (banner overlay, no user-facing workflow). The no-emoji rule applies to research canvas node icons only (pill / engine / database / router / output / arch).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px; margin-top: 8px; font-size: 11px; color: rgba(255,255,255,0.2); display: flex; gap: 32px; flex-wrap: wrap;">
+  <span>Peptide Journal v0.1</span>
+  <span>Research nodes: app/(pages)/research/page.jsx</span>
+  <span>Chain node: app/_components/ui/dashboard/AnalyticalChain.jsx</span>
+  <span>Last updated: March 15 2026</span>
+  <span>Research canvas icons: text labels only (Rx, Cx, SM, G, P, W, L, H, Px, Ix, Ev, Fs, T, D, R, S) — NO emoji</span>
+  <span>Chain node icons: emoji OK (banner overlay context only)</span>
+</div>
+
+</body>
+</html>

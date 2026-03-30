@@ -1,0 +1,133 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.d{background:#0d0f14;color:#ebdbb2;font-family:-apple-system,sans-serif;padding:14px}
+.row{display:flex;gap:10px;margin-bottom:10px;align-items:stretch}
+.card{background:#151820;border-radius:18px;border:1px solid rgba(255,255,255,0.06);overflow:hidden}
+.lbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#504945;margin-bottom:3px}
+.val{font-size:26px;font-weight:500;line-height:1.1}
+.sub{font-size:10px;color:#a89984;margin-top:2px}
+.leg{display:flex;gap:10px;margin-bottom:6px}
+.leg span{font-size:10px;color:#a89984;display:flex;align-items:center;gap:4px}
+.leg b{width:12px;height:3px;display:inline-block;border-radius:2px}
+</style>
+
+<div class="d">
+
+<div class="row" style="align-items:center;margin-bottom:10px">
+  <div style="font-size:15px;font-weight:500">Spring Healing Stack</div>
+  <div style="font-size:10px;color:#665c54;margin-left:8px">Week 4 of 12 · Active</div>
+  <div style="margin-left:auto;font-size:11px;color:#fabd2f" id="clk">--:--:--</div>
+</div>
+
+<div class="row">
+  <div class="card" style="padding:12px 16px;text-align:center;width:106px"><div class="lbl">Adherence</div><div class="val" style="color:#b8bb26">82%</div><div class="sub">18 of 22</div></div>
+  <div class="card" style="padding:12px 16px;text-align:center;width:106px"><div class="lbl">Missed</div><div class="val" style="color:#fb4934">4</div><div class="sub">doses</div></div>
+  <div class="card" style="padding:12px 16px;text-align:center;width:106px"><div class="lbl">Week</div><div class="val" style="color:#fabd2f">4/12</div><div class="sub">33% done</div></div>
+  <div class="card" style="padding:12px 16px;text-align:center;width:128px"><div class="lbl">Next Dose</div><div class="val" style="font-size:17px;color:#8ec07c" id="tmr">06:23:41</div><div class="sub">BPC-157</div></div>
+  <div class="card" style="flex:1;padding:12px 16px">
+    <div class="lbl" style="margin-bottom:6px">Cycle Progress — Week 4 of 12</div>
+    <div style="height:7px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin-bottom:5px"><div style="height:100%;width:33%;background:linear-gradient(90deg,#fabd2f,#fe8019);border-radius:4px"></div></div>
+    <div style="display:flex;gap:6px">
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(131,165,152,0.12);color:#83a598">Loading 1-2</span>
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(250,189,47,0.18);color:#fabd2f;border:1px solid rgba(250,189,47,0.3)">Peak 3-8 ◀</span>
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(254,128,25,0.08);color:#665c54">Taper 9-11</span>
+      <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(251,73,52,0.08);color:#665c54">PCT 12</span>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card" style="display:flex;padding:0">
+    <div style="padding:14px;text-align:center"><canvas id="g0" width="148" height="148"></canvas><div style="font-size:10px;color:#fb4934;margin-top:1px">BPC-157 · 250 mcg</div></div>
+    <div style="padding:14px;text-align:center;border-left:1px solid rgba(255,255,255,0.05)"><canvas id="g1" width="148" height="148"></canvas><div style="font-size:10px;color:#83a598;margin-top:1px">TB-500 · 2 mg</div></div>
+    <div style="padding:14px;text-align:center;border-left:1px solid rgba(255,255,255,0.05)"><canvas id="g2" width="148" height="148"></canvas><div style="font-size:10px;color:#fabd2f;margin-top:1px">GHK-Cu · 1 mg</div></div>
+    <div style="padding:14px;text-align:center;border-left:1px solid rgba(255,255,255,0.05)"><canvas id="g3" width="148" height="148"></canvas><div style="font-size:10px;color:#8ec07c;margin-top:1px">Semax · 400 mcg</div></div>
+  </div>
+  <div class="card" style="flex:1;padding:14px">
+    <div class="lbl" style="margin-bottom:6px">Adherence by compound</div>
+    <div style="position:relative;height:186px"><canvas id="cadh"></canvas></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card" style="flex:2;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="lbl" style="margin-bottom:0">12-week dose timeline</div>
+      <div class="leg"><span><b style="background:#fb4934"></b>BPC-157</span><span><b style="background:#83a598"></b>TB-500</span><span><b style="background:#fabd2f"></b>GHK-Cu</span><span><b style="background:#8ec07c"></b>Semax</span></div>
+    </div>
+    <div style="position:relative;height:180px"><canvas id="ctm"></canvas></div>
+  </div>
+  <div class="card" style="flex:1;padding:14px">
+    <div class="lbl" style="margin-bottom:6px">Daily injection count — last 30 days</div>
+    <div style="position:relative;height:180px"><canvas id="chist"></canvas></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card" style="flex:1;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="lbl" style="margin-bottom:0">Cumulative dose exposure</div>
+      <div class="leg"><span><b style="background:#fb4934"></b>BPC-157</span><span><b style="background:#83a598"></b>TB-500</span></div>
+    </div>
+    <div style="position:relative;height:160px"><canvas id="carea"></canvas></div>
+  </div>
+  <div class="card" style="flex:1;padding:14px">
+    <div class="lbl" style="margin-bottom:6px">Protocol comparison — all metrics</div>
+    <div class="leg"><span><b style="background:#fb4934"></b>BPC-157</span><span><b style="background:#83a598"></b>TB-500</span><span><b style="background:#fabd2f"></b>GHK-Cu</span><span><b style="background:#8ec07c"></b>Semax</span></div>
+    <div style="position:relative;height:140px"><canvas id="ccomp"></canvas></div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const C=[
+  {n:'BPC-157',c:'#fb4934',adh:88, dose:250,u:'mcg'},
+  {n:'TB-500', c:'#83a598',adh:75, dose:2,  u:'mg'},
+  {n:'GHK-Cu', c:'#fabd2f',adh:100,dose:1,  u:'mg'},
+  {n:'Semax',  c:'#8ec07c',adh:60, dose:400,u:'mcg'},
+]
+const gc={backgroundColor:'rgba(12,14,20,0.95)',titleColor:'#ebdbb2',bodyColor:'#a89984',borderColor:'rgba(255,255,255,0.1)',borderWidth:1}
+
+function gauge(id,val,color){
+  const cv=document.getElementById(id);if(!cv)return
+  const ctx=cv.getContext('2d'),cx=74,cy=74,r=58,lw=12
+  const s=-Math.PI*1.2,e=Math.PI*0.2,rng=e-s
+  ctx.clearRect(0,0,148,148)
+  ctx.beginPath();ctx.arc(cx,cy,r,s,e);ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke()
+  ctx.beginPath();ctx.arc(cx,cy,r,s,s+rng*(val/100));ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke()
+  ctx.beginPath();ctx.arc(cx,cy,r-16,0,Math.PI*2);ctx.strokeStyle=color+'22';ctx.lineWidth=2;ctx.stroke()
+  ctx.fillStyle=color;ctx.font='bold 22px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(val+'%',cx,cy-5)
+  ctx.fillStyle='rgba(255,255,255,0.28)';ctx.font='9px -apple-system,sans-serif';ctx.fillText('adherence',cx,cy+11)
+  const na=s+rng*(val/100)
+  ctx.beginPath();ctx.moveTo(cx+(r-6)*Math.cos(na),cy+(r-6)*Math.sin(na));ctx.lineTo(cx+(r+5)*Math.cos(na),cy+(r+5)*Math.sin(na));ctx.strokeStyle=color;ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke()
+  ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()
+}
+C.forEach((cp,i)=>gauge('g'+i,cp.adh,cp.c))
+
+function sr(s){let x=s;return()=>{x=(x*16807)%2147483647;return(x-1)/2147483646}}
+const wks=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12']
+
+new Chart(document.getElementById('cadh'),{type:'bar',data:{labels:C.map(c=>c.n),datasets:[{data:C.map(c=>c.adh),backgroundColor:C.map(c=>c.c+'99'),borderColor:C.map(c=>c.c),borderWidth:1,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{...gc,callbacks:{label:c=>c.raw+'% adherence'}}},scales:{x:{min:0,max:100,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9},callback:v=>v+'%'}},y:{grid:{display:false},ticks:{color:'rgba(255,255,255,0.55)',font:{size:11}}}}}})
+
+new Chart(document.getElementById('ctm'),{type:'line',data:{labels:wks,datasets:C.map(cp=>{const r=sr(cp.adh);return{label:cp.n,data:wks.map(()=>Math.min(100,Math.max(20,Math.round(cp.adh+(r()-0.5)*22)))),borderColor:cp.c,backgroundColor:cp.c+'20',fill:true,tension:0.45,borderWidth:2,pointRadius:2.5,pointBackgroundColor:cp.c}})},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...gc}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9}}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9},callback:v=>v+'%'}}}}})
+
+const days=Array.from({length:30},(_,i)=>`${i+1}`)
+const r2=sr(42)
+new Chart(document.getElementById('chist'),{type:'bar',data:{labels:days,datasets:[{data:days.map(()=>Math.round(1+r2()*3)),backgroundColor:'#458588aa',borderColor:'#83a598',borderWidth:0,borderRadius:3,barPercentage:0.8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...gc,callbacks:{label:c=>`${c.raw} injections`}}},scales:{x:{grid:{display:false},ticks:{color:'rgba(255,255,255,0.2)',font:{size:8},maxTicksLimit:10}},y:{min:0,max:4,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9},stepSize:1}}}}})
+
+const r3=sr(77),r4=sr(55)
+new Chart(document.getElementById('carea'),{type:'line',data:{labels:wks,datasets:[{label:'BPC-157',data:wks.map((_,i)=>Math.round((i+1)*250*0.88+r3()*200)),borderColor:'#fb4934',backgroundColor:'#fb493430',fill:true,tension:0.4,borderWidth:2,pointRadius:0},{label:'TB-500',data:wks.map((_,i)=>Math.round((i+1)*2*0.75+r4()*3)),borderColor:'#83a598',backgroundColor:'#83a59820',fill:true,tension:0.4,borderWidth:2,pointRadius:0,yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...gc}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9}},title:{display:true,text:'mcg',color:'rgba(255,255,255,0.2)',font:{size:9}}},y2:{position:'right',grid:{display:false},ticks:{color:'rgba(255,255,255,0.2)',font:{size:9}},title:{display:true,text:'mg',color:'rgba(255,255,255,0.2)',font:{size:9}}}}}})
+
+new Chart(document.getElementById('ccomp'),{type:'bar',data:{labels:['Adherence','Consistency','Frequency','Timing','Protocol Fit'],datasets:C.map(cp=>({label:cp.n,data:[cp.adh,Math.round(cp.adh*.95),cp.adh>=80?100:75,Math.round(cp.adh*.9),Math.round(cp.adh*.85)],backgroundColor:cp.c+'88',borderColor:cp.c,borderWidth:1,borderRadius:4}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...gc}},scales:{x:{grid:{display:false},ticks:{color:'rgba(255,255,255,0.35)',font:{size:9}}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.3)',font:{size:9},callback:v=>v+'%'}}}}})
+
+let s=6*3600+23*60+41
+setInterval(()=>{
+  s=s>0?s-1:86399
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60
+  const el=document.getElementById('tmr');if(el)el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0')
+  const cl=document.getElementById('clk');if(cl)cl.textContent=new Date().toLocaleTimeString()
+},1000)
+</script>

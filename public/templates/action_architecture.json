@@ -1,0 +1,21 @@
+{
+  "name": "Architecture Diagram",
+  "description": "Generated architecture diagram",
+  "components": [
+    { "id": "user", "type": "user", "name": "User", "position": { "x": -159.47, "y": 303.68 }, "properties": { "tech_stack": "Browser / Mobile", "description": "End-user accessing the application from a client device" } },
+    { "id": "react-app", "type": "frontend", "name": "React Frontend", "position": { "x": 181.31, "y": -11.58 }, "properties": { "tech_stack": "React / Vite / TypeScript", "runtime": "JavaScript", "description": "Single-page application for user interaction and UI rendering" } },
+    { "id": "cdn", "type": "cdn", "name": "Content Delivery Network", "position": { "x": 695.29, "y": -14.08 }, "properties": { "tech_stack": "Cloudflare / Akamai / AWS CloudFront", "description": "Distributes static assets globally for low-latency access" } },
+    { "id": "load-balancer", "type": "load_balancer", "name": "Load Balancer", "position": { "x": 269.38, "y": 280.37 }, "properties": { "tech_stack": "NGINX / HAProxy / AWS ELB", "description": "Distributes incoming traffic to backend servers", "scalability": "horizontal" } },
+    { "id": "node-api", "type": "server", "name": "Node.js Backend API", "position": { "x": 680.08, "y": 271.15 }, "properties": { "tech_stack": "Node.js / Express.js / NestJS", "runtime": "JavaScript", "description": "Handles business logic, API requests, authentication, and data processing", "scalability": "horizontal" } },
+    { "id": "redis-cache", "type": "cache", "name": "Redis Cache", "position": { "x": 1084.89, "y": 378.21 }, "properties": { "tech_stack": "Redis", "description": "In-memory cache for speeding up data access and reducing DB load", "scalability": "horizontal" } },
+    { "id": "postgres-db", "type": "database", "name": "PostgreSQL Database", "position": { "x": 1080.66, "y": 149.88 }, "properties": { "tech_stack": "PostgreSQL", "description": "Relational database for storing user data, content, and transactions", "scalability": "vertical" } }
+  ],
+  "connections": [
+    { "from": "user", "to": "react-app", "type": "direct", "label": "Access via Browser" },
+    { "from": "react-app", "to": "cdn", "type": "direct", "label": "Static Asset Fetch" },
+    { "from": "react-app", "to": "load-balancer", "type": "direct", "label": "" },
+    { "from": "load-balancer", "to": "node-api", "type": "direct", "label": "Route API Call" },
+    { "from": "node-api", "to": "postgres-db", "type": "direct", "label": "CRUD Operations" },
+    { "from": "node-api", "to": "redis-cache", "type": "direct", "label": "Cache Layer" }
+  ]
+}

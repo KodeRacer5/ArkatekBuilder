@@ -1,0 +1,22 @@
+{
+  "id": "bpc157",
+  "name": "BPC-157 Protocol Analysis",
+  "components": [
+    { "id": "input_labs", "name": "Patient Lab Panel", "type": "user", "position": { "x": 50, "y": 200 }, "properties": { "tech_stack": "Upload CBC, CMP, inflammatory markers", "description": "Patient baseline data input" } },
+    { "id": "cx_engine", "name": "CortixEngine", "type": "api_gateway", "position": { "x": 340, "y": 200 }, "properties": { "tech_stack": "Peptide simulation core", "description": "Analyzes lab values against BPC-157 protocol parameters" } },
+    { "id": "dosing", "name": "Dosing Calculator", "type": "api", "position": { "x": 620, "y": 100 }, "properties": { "tech_stack": "200–500 mcg/day SC or oral", "description": "Weight-adjusted dosing recommendation" } },
+    { "id": "stacking", "name": "Stack Optimizer", "type": "api", "position": { "x": 620, "y": 300 }, "properties": { "tech_stack": "TB-500 / GHK-Cu / KPV synergy", "description": "Identifies synergistic co-peptides based on biomarkers" } },
+    { "id": "timeline", "name": "Protocol Timeline", "type": "analytics", "position": { "x": 900, "y": 100 }, "properties": { "tech_stack": "8-week cycle planner", "description": "Injection schedule, reassessment windows" } },
+    { "id": "contraindications", "name": "Contraindication Check", "type": "auth_service", "position": { "x": 900, "y": 300 }, "properties": { "tech_stack": "NSAID / drug interaction screen", "description": "Flags concurrent medications that reduce efficacy" } },
+    { "id": "report", "name": "Clinical Report", "type": "file_storage", "position": { "x": 1160, "y": 200 }, "properties": { "tech_stack": "PDF export", "description": "Clinician-ready protocol summary" } }
+  ],
+  "connections": [
+    { "from": "input_labs", "to": "cx_engine", "label": "lab data" },
+    { "from": "cx_engine", "to": "dosing", "label": "patient profile" },
+    { "from": "cx_engine", "to": "stacking", "label": "biomarker match" },
+    { "from": "dosing", "to": "timeline", "label": "dose params" },
+    { "from": "stacking", "to": "contraindications", "label": "stack candidates" },
+    { "from": "timeline", "to": "report", "label": "schedule" },
+    { "from": "contraindications", "to": "report", "label": "safety check" }
+  ]
+}

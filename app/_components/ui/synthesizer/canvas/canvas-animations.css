@@ -1,0 +1,208 @@
+/**
+ * Canvas Node Animations
+ * Source: n8n CanvasNodeDefault.vue lines 358-397
+ * Colors adapted from n8n orange (255,109,90) to CortixEngine warm accent (195,175,155)
+ */
+
+/* ── CSS Custom Property for gradient rotation ── */
+@property --node--gradient-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Running node: conic-gradient border animation ── */
+.canvas-node-running,
+.canvas-node-waiting {
+  position: relative;
+}
+
+.canvas-node-running::after,
+.canvas-node-waiting::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  z-index: -1;
+  background: conic-gradient(
+    from var(--node--gradient-angle),
+    rgba(34, 197, 94, 1),
+    rgba(34, 197, 94, 1) 20%,
+    rgba(34, 197, 94, 0.2) 35%,
+    rgba(34, 197, 94, 0.2) 65%,
+    rgba(34, 197, 94, 1) 90%,
+    rgba(34, 197, 94, 1)
+  );
+}
+
+/* Running: fast rotation (1.5s) */
+.canvas-node-running::after {
+  animation: border-rotate 1.5s linear infinite;
+}
+
+/* Waiting: slow rotation (4.5s) */
+.canvas-node-waiting::after {
+  animation: border-rotate 4.5s linear infinite;
+}
+
+/* ── Circle node variant ── */
+.canvas-node-circle.canvas-node-running::after,
+.canvas-node-circle.canvas-node-waiting::after {
+  border-radius: 50%;
+}
+
+/* ── Pill node variant ── */
+.canvas-node-pill.canvas-node-running::after,
+.canvas-node-pill.canvas-node-waiting::after {
+  border-radius: 46px;
+}
+
+/* ── Square node variant ── */
+.canvas-node-square.canvas-node-running::after,
+.canvas-node-square.canvas-node-waiting::after {
+  border-radius: 9px;
+}
+
+/* ── Rounded / SmRounded node variant ── */
+.canvas-node-rounded.canvas-node-running::after,
+.canvas-node-rounded.canvas-node-waiting::after,
+.canvas-node-smrounded.canvas-node-running::after,
+.canvas-node-smrounded.canvas-node-waiting::after {
+  border-radius: 46px 9px 9px 46px;
+}
+
+/* ── Tall / Splitter node variant ── */
+.canvas-node-tall.canvas-node-running::after,
+.canvas-node-tall.canvas-node-waiting::after,
+.canvas-node-splitter.canvas-node-running::after,
+.canvas-node-splitter.canvas-node-waiting::after {
+  border-radius: 9px;
+}
+
+/* ── Engine node variant ── */
+.canvas-node-engine.canvas-node-running::after,
+.canvas-node-engine.canvas-node-waiting::after {
+  border-radius: 9px;
+}
+
+@keyframes border-rotate {
+  from { --node--gradient-angle: 0deg; }
+  to { --node--gradient-angle: 360deg; }
+}
+
+/* ── Sticky note: no running/waiting animation ── */
+.canvas-node-stickynote.canvas-node-running::after,
+.canvas-node-stickynote.canvas-node-waiting::after {
+  display: none;
+}
+
+/* ── Sticky note selected: warm yellow glow ── */
+.canvas-node-stickynote.canvas-node-selected {
+  box-shadow: 0 0 0 2px rgba(255, 234, 107, 0.25);
+}
+
+/* ── Selected node: accent shadow ── */
+.canvas-node-selected {
+  box-shadow: 0 0 0 2px rgba(195, 175, 155, 0.25);
+}
+
+/* ── Success node: green border ── */
+.canvas-node-success {
+  border-color: rgba(34, 197, 94, 0.4) !important;
+}
+
+/* ── Error node: red border ── */
+.canvas-node-error {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+/* ── Disabled node: strikethrough + dimmed ── */
+.canvas-node-disabled {
+  opacity: 0.5;
+}
+
+/* ── Node delete button: hidden by default, visible on hover ── */
+.canvas-node:hover .canvas-node-delete {
+  opacity: 1;
+}
+.canvas-node-delete {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+/* ── Handle positioning overrides ──
+   ReactFlow's .react-flow__handle-left/right set position, transform, left/right
+   via CSS class rules. Inline styles on <Handle> are unreliable for overriding
+   these properties. Use !important to guarantee our positioning wins. */
+
+/* Output [+] button: force static flow inside flex container.
+   This makes the button a flex sibling of the circle and rod,
+   eliminating any gap between them. */
+.canvas-handle-output.react-flow__handle {
+  position: static !important;
+  transform: none !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  pointer-events: all;
+  flex-shrink: 0;
+}
+
+/* Engine Data diamond (connector ⑤): force static flow inside sub-port flex column.
+   ReactFlow normally applies position:absolute + translate(-50%,-50%) to all Handles.
+   We override so the diamond stays inline in the sub-port column layout.
+   rotate(45deg) keeps the diamond shape while overriding ReactFlow's translate. */
+.canvas-handle-data-diamond.react-flow__handle {
+  position: static !important;
+  transform: rotate(45deg) !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  pointer-events: all;
+  flex-shrink: 0;
+}
+
+/* ── Handle hover highlight ── */
+.canvas-handle:hover {
+  border-color: rgba(34, 197, 94, 0.6) !important;
+  background: rgba(34, 197, 94, 0.25) !important;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+}
+
+/* ── Edge animation during execution ── */
+.canvas-edge-running {
+  animation: edge-pulse 1s ease-in-out infinite;
+}
+
+@keyframes edge-pulse {
+  0%, 100% { stroke-opacity: 0.3; }
+  50% { stroke-opacity: 0.8; }
+}
+
+/* ── Icon spin animation (loaders, running badges) ── */
+@keyframes cortix-icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Canvas design tokens ── */
+:root {
+  --canvas-node--width: 170px;
+  --canvas-node--height: 56px;
+  --canvas-node--circle-size: 64px;
+  --canvas-node--border-width: 3px;
+  --canvas-node--border-radius: 9px;
+  --color--success: #22c55e;
+  --color--danger: #ef4444;
+  --color--warning: #eab308;
+  --color--primary: #C2B9A7;
+  --color--background: #1A1918;
+  --spacing--xs: 8px;
+  --spacing--sm: 12px;
+  --spacing--md: 16px;
+  --font-size--2xs: 8px;
+  --font-size--xs: 10px;
+  --font-size--sm: 11px;
+}

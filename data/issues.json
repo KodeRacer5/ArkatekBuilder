@@ -1,0 +1,37 @@
+[
+  {
+    "id": "8327e065-4271-45ce-a258-8ce8c6599e7d",
+    "title": "Peptide Journal March 2026",
+    "subtitle": "",
+    "volume": "",
+    "issueDate": "2026-03-29",
+    "tags": [
+      "user-upload"
+    ],
+    "status": "processing",
+    "pdfPath": "/issues/8327e065-4271-45ce-a258-8ce8c6599e7d/document.pdf",
+    "coverPath": null,
+    "pagesPath": null,
+    "totalPages": null,
+    "fileSize": "6.8 MB",
+    "createdAt": "2026-03-29T07:03:39.698Z",
+    "canvasTemplate": null
+  },
+  {
+    "id": "bf72387b-e1d7-4805-8bb5-8d5d8b5d6d35",
+    "title": "",
+    "subtitle": "",
+    "volume": "",
+    "issueDate": "2026-03-12",
+    "tags": [],
+    "status": "published",
+    "pdfPath": "/issues/bf72387b-e1d7-4805-8bb5-8d5d8b5d6d35/document.pdf",
+    "coverPath": "/issues/bf72387b-e1d7-4805-8bb5-8d5d8b5d6d35/cover.webp",
+    "pagesPath": "/issues/bf72387b-e1d7-4805-8bb5-8d5d8b5d6d35/pages",
+    "totalPages": 14,
+    "fileSize": "111.7 MB",
+    "createdAt": "2026-03-12T10:40:04.433Z",
+    "canvasTemplate": null,
+    "updatedAt": "2026-03-12T10:51:35.161Z"
+  }
+]

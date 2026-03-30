@@ -1,0 +1,92 @@
+/* Gruvbox Dark — CSS Variables */
+
+:root {
+  --gb-bg-hard:       #1d2021;
+  --gb-bg:            #282828;
+  --gb-bg-soft:       #32302f;
+  --gb-bg-1:          #3c3836;
+  --gb-bg-2:          #504945;
+  --gb-bg-3:          #665c54;
+  --gb-bg-4:          #7c6f64;
+  --gb-fg-4:          #a89984;
+  --gb-fg-3:          #bdae93;
+  --gb-fg-2:          #d5c4a1;
+  --gb-fg-1:          #ebdbb2;
+  --gb-fg-0:          #fbf1c7;
+  --gb-red:           #cc241d;
+  --gb-green:         #98971a;
+  --gb-yellow:        #d79921;
+  --gb-blue:          #458588;
+  --gb-purple:        #b16286;
+  --gb-aqua:          #689d6a;
+  --gb-orange:        #d65d0e;
+  --gb-red-bright:    #fb4934;
+  --gb-green-bright:  #b8bb26;
+  --gb-yellow-bright: #fabd2f;
+  --gb-blue-bright:   #83a598;
+  --gb-purple-bright: #d3869b;
+  --gb-aqua-bright:   #8ec07c;
+  --gb-orange-bright: #fe8019;
+  --gb-canvas:        #282828;
+  --gb-node-bg:       #32302f;
+  --gb-node-border:   #3c3836;
+  --gb-node-border-active: #458588;
+  --gb-text:          #ebdbb2;
+  --gb-text-dim:      #a89984;
+  --gb-text-bright:   #fbf1c7;
+  --gb-input-bg:      #504945;
+  --gb-dot-grid:      #3c3836;
+
+  /* Switchable semantic vars — default (non-Gruvbox) */
+  --canvas-bg:   #0c0e14;
+  --topbar-bg:   #0d1117;
+  --widget-bg:   rgba(30,35,45,0.72);
+  --dock-bg:               rgba(30,35,45,0.72);
+  --dock-border:           rgba(255,255,255,0.14);
+  --dock-item-bg:          linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.07) 100%);
+  --dock-item-border:      rgba(255,255,255,0.22);
+  --dock-item-hover:       linear-gradient(145deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.12) 100%);
+  --dock-item-border-hover:rgba(255,255,255,0.40);
+  --dock-label-bg:         rgba(30,35,45,0.92);
+  --dock-label-border:     rgba(255,255,255,0.14);
+}
+
+/* Gruvbox theme — activates via data-theme="gruvbox" on body */
+[data-theme="gruvbox"] {
+  --canvas-bg:   var(--gb-canvas);
+  --topbar-bg:   var(--gb-bg-soft);
+  --widget-bg:   rgba(80,73,69,0.72);
+  --dock-bg:               rgba(80,73,69,0.72);
+  --dock-border:           rgba(235,219,178,0.14);
+  --dock-item-bg:          linear-gradient(145deg, rgba(235,219,178,0.12) 0%, rgba(235,219,178,0.05) 100%);
+  --dock-item-border:      rgba(235,219,178,0.2);
+  --dock-item-hover:       linear-gradient(145deg, rgba(235,219,178,0.22) 0%, rgba(235,219,178,0.10) 100%);
+  --dock-item-border-hover:rgba(235,219,178,0.38);
+  --dock-label-bg:         rgba(50,48,47,0.92);
+  --dock-label-border:     rgba(235,219,178,0.14);
+  --background: 28 14% 16%;
+  --foreground: 45 59% 88%;
+  --border:     28 10% 22%;
+  --input:      28 10% 22%;
+  --card:       28 12% 19%;
+  --card-foreground:    45 59% 88%;
+  --muted:              28 10% 22%;
+  --muted-foreground:   30 13% 59%;
+  --primary:            42 87% 55%;
+  --primary-foreground: 28 14% 12%;
+  --accent:             42 87% 55%;
+  --accent-foreground:  28 14% 12%;
+}
+
+[data-theme="gruvbox"] body {
+  background: var(--gb-bg);
+  color: var(--gb-fg-1);
+}
+
+[data-theme="gruvbox"] .react-flow__controls-button {
+  background: var(--gb-bg-1) !important;
+  border-bottom: 1px solid var(--gb-bg-2) !important;
+}
+[data-theme="gruvbox"] .react-flow__controls-button svg {
+  fill: var(--gb-fg-4) !important;
+}

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DREAMS Selector</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  .wrapper { width: 100%; max-width: 780px; padding: 20px; }
+
+  @keyframes si-hex-in {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes si-ring-in {
+    from { opacity: 0; transform: scale(0.75) rotate(-20deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes si-pill-in {
+    from { opacity: 0; transform: translateX(-60px) scaleX(0.7); }
+    to   { opacity: 1; transform: translateX(0) scaleX(1); }
+  }
+  @keyframes si-line-in {
+    from { opacity: 0; stroke-dashoffset: 80; }
+    to   { opacity: 0.85; stroke-dashoffset: 0; }
+  }
+
+  .si-hex  { transform-origin: 625px 350px; animation: si-hex-in  0.65s cubic-bezier(0.34,1.56,0.64,1) 0.10s both; }
+  .si-ring { transform-origin: 625px 350px; animation: si-ring-in 0.80s cubic-bezier(0.34,1.20,0.64,1) 0.05s both; }
+
+  .si-pill-0 { animation: si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.20s both; }
+  .si-pill-1 { animation: si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.27s both; }
+  .si-pill-2 { animation: si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.34s both; }
+  .si-pill-3 { animation: si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.41s both; }
+  .si-pill-4 { animation: si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.48s both; }
+  .si-pill-5 { animation: si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.55s both; }
+
+  .si-line-0 { animation: si-line-in 0.4s ease-out 0.25s both; stroke-dasharray: 5 6; }
+  .si-line-1 { animation: si-line-in 0.4s ease-out 0.32s both; stroke-dasharray: 5 6; }
+  .si-line-2 { animation: si-line-in 0.4s ease-out 0.39s both; stroke-dasharray: 5 6; }
+  .si-line-3 { animation: si-line-in 0.4s ease-out 0.46s both; stroke-dasharray: 5 6; }
+  .si-line-4 { animation: si-line-in 0.4s ease-out 0.53s both; stroke-dasharray: 5 6; }
+  .si-line-5 { animation: si-line-in 0.4s ease-out 0.60s both; stroke-dasharray: 5 6; }
+
+  .pill-group {
+    cursor: pointer;
+    transition: filter 0.22s ease;
+  }
+  .pill-group:hover rect:first-child {
+    filter: brightness(1.15);
+  }
+  svg { overflow: visible; display: block; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+<svg viewBox="0 0 780 700" width="100%">
+<defs>
+  <linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fb6b56"/><stop offset="100%" stop-color="#b82010"/></linearGradient>
+  <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#e080b0"/><stop offset="100%" stop-color="#904070"/></linearGradient>
+  <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fcd050"/><stop offset="100%" stop-color="#b88000"/></linearGradient>
+  <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#60d080"/><stop offset="100%" stop-color="#208840"/></linearGradient>
+  <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#50b8b0"/><stop offset="100%" stop-color="#106890"/></linearGradient>
+  <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8d850"/><stop offset="100%" stop-color="#789000"/></linearGradient>
+  <radialGradient id="hub" cx="40%" cy="35%" r="65%">
+    <stop offset="0%" stop-color="#1e1e30"/>
+    <stop offset="100%" stop-color="#050510"/>
+  </radialGradient>
+  <filter id="fshadow"><feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="#000" flood-opacity="0.7"/></filter>
+  <filter id="fsoft"><feDropShadow dx="2" dy="5" stdDeviation="10" flood-color="#000" flood-opacity="0.5"/></filter>
+  <filter id="fglow0"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#fb6b56" flood-opacity="0.6"/></filter>
+  <filter id="fglow1"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#e080b0" flood-opacity="0.6"/></filter>
+  <filter id="fglow2"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#fcd050" flood-opacity="0.6"/></filter>
+  <filter id="fglow3"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#60d080" flood-opacity="0.6"/></filter>
+  <filter id="fglow4"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#50b8b0" flood-opacity="0.6"/></filter>
+  <filter id="fglow5"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#c8d850" flood-opacity="0.6"/></filter>
+</defs>
+
+<!-- OUTER RING -->
+<circle class="si-ring" cx="625" cy="350" r="310"
+  fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="3 10"/>
+
+<!-- INNER RING -->
+<circle class="si-ring" cx="625" cy="350" r="173"
+  fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="8" stroke-dasharray="4 8"/>
+
+<!-- HUB -->
+<g class="si-hex">
+  <circle cx="625" cy="350" r="145" fill="url(#hub)" stroke="rgba(255,255,255,0.12)" stroke-width="2" filter="url(#fshadow)"/>
+  <circle cx="625" cy="350" r="133" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <text x="625" y="316" text-anchor="middle" fill="rgba(255,255,255,0.4)"
+    style="font-size:12px;font-weight:700;letter-spacing:0.24em;">BUSINESS</text>
+  <text x="625" y="350" text-anchor="middle" fill="white"
+    style="font-size:30px;font-weight:900;letter-spacing:0.08em;">DREAMS</text>
+  <text x="625" y="378" text-anchor="middle" fill="rgba(255,255,255,0.85)"
+    style="font-size:18px;font-weight:700;letter-spacing:0.14em;">SCORE</text>
+  <circle cx="590" cy="404" r="5" fill="#fb6b56"/>
+  <circle cx="604" cy="404" r="5" fill="#e080b0"/>
+  <circle cx="618" cy="404" r="5" fill="#fcd050"/>
+  <circle cx="632" cy="404" r="5" fill="#60d080"/>
+  <circle cx="646" cy="404" r="5" fill="#50b8b0"/>
+  <circle cx="660" cy="404" r="5" fill="#c8d850"/>
+</g>
+
+<!-- ─────────────────────────────────────────────────
+     PILLS — hub right HX=625 HY=350
+     angles: -40 -24 -8 8 24 40
+     arcDist=370  nodeR=178
+     PW=240 PH=64 R=32
+     connector: hub-ring point → pill left edge
+───────────────────────────────────────────────── -->
+
+<!-- PILL 0 · D · Debt Management · angle=-40° -->
+<!-- node: nx=625-178*cos40=625-136=489, ny=350-178*sin40=350-114=236 -->
+<!-- pill center: pcx=625-370*cos40=625-283=342, pcy=350-370*sin40=350-238=112 -->
+<g>
+  <line class="si-line-0" x1="489" y1="236" x2="462" y2="112"
+    stroke="#fb6b56" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- node dot only — no hex icon -->
+  <circle cx="489" cy="236" r="6" fill="#fb6b56" opacity="0.9"/>
+  <circle cx="489" cy="236" r="3" fill="white" opacity="0.6"/>
+  <!-- pill -->
+  <g class="pill-group si-pill-0" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow0)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="222" y="80" width="240" height="64" rx="32" fill="url(#g0)"/>
+    <rect x="254" y="81" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="342" y="106" text-anchor="middle" fill="white"
+      style="font-size:17px;font-weight:900;letter-spacing:0.04em;">Debt Management</text>
+    <text x="342" y="128" text-anchor="middle" fill="rgba(255,255,255,0.72)"
+      style="font-size:11px;letter-spacing:0.06em;">RESTRUCTURE · FUNDING · SBA</text>
+  </g>
+</g>
+
+<!-- PILL 1 · R · Retirement & Planning · angle=-24° -->
+<!-- node: nx=625-178*cos24=625-163=462, ny=350-178*sin24=350-72=278 -->
+<!-- pill: pcx=625-370*cos24=625-338=287, pcy=350-370*sin24=350-150=200 -->
+<g>
+  <line class="si-line-1" x1="462" y1="278" x2="407" y2="200"
+    stroke="#e080b0" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="462" cy="278" r="6" fill="#e080b0" opacity="0.9"/>
+  <circle cx="462" cy="278" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-1" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow1)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="167" y="168" width="240" height="64" rx="32" fill="url(#g1)"/>
+    <rect x="199" y="169" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="287" y="194" text-anchor="middle" fill="white"
+      style="font-size:17px;font-weight:900;letter-spacing:0.04em;">Retirement &amp; Planning</text>
+    <text x="287" y="216" text-anchor="middle" fill="rgba(255,255,255,0.72)"
+      style="font-size:11px;letter-spacing:0.06em;">401K · IRA · KEY-PERSON</text>
+  </g>
+</g>
+
+<!-- PILL 2 · E · Expense Management · angle=-8° -->
+<!-- node: nx=625-178*cos8=625-176=449, ny=350-178*sin8=350-25=325 -->
+<!-- pill: pcx=625-370*cos8=625-366=259, pcy=350-370*sin8=350-51=299 -->
+<g>
+  <line class="si-line-2" x1="449" y1="325" x2="379" y2="299"
+    stroke="#fcd050" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="449" cy="325" r="6" fill="#fcd050" opacity="0.9"/>
+  <circle cx="449" cy="325" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-2" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow2)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="139" y="267" width="240" height="64" rx="32" fill="url(#g2)"/>
+    <rect x="171" y="268" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="259" y="293" text-anchor="middle" fill="white"
+      style="font-size:17px;font-weight:900;letter-spacing:0.04em;">Expense Management</text>
+    <text x="259" y="315" text-anchor="middle" fill="rgba(255,255,255,0.72)"
+      style="font-size:11px;letter-spacing:0.06em;">ENERGY · HEALTHCARE · PAYROLL</text>
+  </g>
+</g>
+
+<!-- PILL 3 · A · Asset Management · angle=8° -->
+<!-- node: nx=449, ny=350+25=375 -->
+<!-- pill: pcx=259, pcy=350+51=401 -->
+<g>
+  <line class="si-line-3" x1="449" y1="375" x2="379" y2="401"
+    stroke="#60d080" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="449" cy="375" r="6" fill="#60d080" opacity="0.9"/>
+  <circle cx="449" cy="375" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-3" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow3)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="139" y="369" width="240" height="64" rx="32" fill="url(#g3)"/>
+    <rect x="171" y="370" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="259" y="395" text-anchor="middle" fill="white"
+      style="font-size:17px;font-weight:900;letter-spacing:0.04em;">Asset Management</text>
+    <text x="259" y="417" text-anchor="middle" fill="rgba(255,255,255,0.72)"
+      style="font-size:11px;letter-spacing:0.06em;">PROTECT · OPTIMIZE · GROW</text>
+  </g>
+</g>
+
+<!-- PILL 4 · M · Money Management · angle=24° -->
+<!-- node: nx=462, ny=350+72=422 -->
+<!-- pill: pcx=287, pcy=350+150=500 -->
+<g>
+  <line class="si-line-4" x1="462" y1="422" x2="407" y2="500"
+    stroke="#50b8b0" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="462" cy="422" r="6" fill="#50b8b0" opacity="0.9"/>
+  <circle cx="462" cy="422" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-4" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow4)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="167" y="468" width="240" height="64" rx="32" fill="url(#g4)"/>
+    <rect x="199" y="469" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="287" y="494" text-anchor="middle" fill="white"
+      style="font-size:17px;font-weight:900;letter-spacing:0.04em;">Money Management</text>
+    <text x="287" y="516" text-anchor="middle" fill="rgba(255,255,255,0.72)"
+      style="font-size:11px;letter-spacing:0.06em;">CASH FLOW · R&amp;D · CREDITS</text>
+  </g>
+</g>
+
+<!-- PILL 5 · S · Security & Succession · angle=40° -->
+<!-- node: nx=489, ny=350+114=464 -->
+<!-- pill: pcx=342, pcy=350+238=588 -->
+<g>
+  <line class="si-line-5" x1="489" y1="464" x2="462" y2="588"
+    stroke="#c8d850" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="489" cy="464" r="6" fill="#c8d850" opacity="0.9"/>
+  <circle cx="489" cy="464" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-5" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow5)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="222" y="556" width="240" height="64" rx="32" fill="url(#g5)"/>
+    <rect x="254" y="557" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="342" y="582" text-anchor="middle" fill="white"
+      style="font-size:17px;font-weight:900;letter-spacing:0.04em;">Security &amp; Succession</text>
+    <text x="342" y="604" text-anchor="middle" fill="rgba(255,255,255,0.72)"
+      style="font-size:11px;letter-spacing:0.06em;">CYBER · COMPLIANCE · RISK</text>
+  </g>
+</g>
+
+</svg>
+</div>
+</body>
+</html>

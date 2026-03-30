@@ -1,0 +1,37 @@
+{
+  "name": "Muscle Gain Optimization Cycle",
+  "description": "Peptide stack for maximizing lean muscle growth, recovery, and anabolic signaling",
+  "components": [
+    { "id": "user_goal", "type": "user", "name": "Goal: Muscle Gain", "position": { "x": 1300, "y": 100 }, "properties": { "tech_stack": "Hypertrophy + Recovery", "description": "Optimize: lean mass + recovery" } },
+    { "id": "labs", "type": "database", "name": "Lab Panel", "position": { "x": 1300, "y": 250 }, "properties": { "tech_stack": "IGF-1 / GH / Testosterone", "description": "Baseline hormones CBC + metabolic panel" } },
+    { "id": "cjc1295", "type": "api_gateway", "name": "CJC-1295", "position": { "x": 1620, "y": 20 }, "properties": { "tech_stack": "GH Secretagogue", "description": "100-300 mcg 2-3x/week. Sustained GH + IGF-1 elevation" } },
+    { "id": "ipamorelin", "type": "api_gateway", "name": "Ipamorelin", "position": { "x": 1620, "y": 170 }, "properties": { "tech_stack": "GH Secretagogue", "description": "200-300 mcg/day. Clean GH pulse + no cortisol spike" } },
+    { "id": "igf1lr3", "type": "api_gateway", "name": "IGF-1 LR3", "position": { "x": 1620, "y": 320 }, "properties": { "tech_stack": "Anabolic / GH Axis", "description": "40-80 mcg/day post-workout. Hyperplasia + hypertrophy" } },
+    { "id": "orchestrator", "type": "load_balancer", "name": "CortixEngine", "position": { "x": 1940, "y": 140 }, "properties": { "tech_stack": "Stack Analyzer", "description": "Timing + interaction check + dose optimization" } },
+    { "id": "mgf", "type": "api", "name": "MGF", "position": { "x": 2240, "y": 20 }, "properties": { "tech_stack": "Cell Activation", "description": "100-200 mcg post-workout 2-3x/week" } },
+    { "id": "follistatin", "type": "api", "name": "Follistatin 344", "position": { "x": 2240, "y": 170 }, "properties": { "tech_stack": "Myostatin Inhibitor", "description": "100 mcg/day x10-day cycles" } },
+    { "id": "bpc157", "type": "auth_service", "name": "BPC-157", "position": { "x": 2240, "y": 320 }, "properties": { "tech_stack": "Healing Peptide", "description": "250-500 mcg/day. Repair/Recovery: Tissue + tendon recovery" } },
+    { "id": "tb500", "type": "auth_service", "name": "TB-500", "position": { "x": 2540, "y": 170 }, "properties": { "tech_stack": "Systemic Healing", "description": "4-8 mg/week loading: 2-4 mg maintenance" } },
+    { "id": "timeline", "type": "analytics", "name": "Protocol Timeline", "position": { "x": 2840, "y": 60 }, "properties": { "tech_stack": "12-Week Cycle", "description": "Phased protocol: loading + maintenance" } },
+    { "id": "safety", "type": "logging", "name": "Safety Monitor", "position": { "x": 2840, "y": 240 }, "properties": { "tech_stack": "Contraindication Check", "description": "IGF-1 levels + glucose + liver monitoring" } },
+    { "id": "cart", "type": "file_storage", "name": "Shopping Cart", "position": { "x": 3120, "y": 140 }, "properties": { "tech_stack": "Order Builder", "description": "Sourced peptides + BAC water + syringes + ancillaries" } }
+  ],
+  "connections": [
+    { "from": "user_goal", "to": "cjc1295", "label": "GH axis" },
+    { "from": "user_goal", "to": "ipamorelin", "label": "GH pulse" },
+    { "from": "user_goal", "to": "igf1lr3", "label": "anabolic" },
+    { "from": "labs", "to": "orchestrator", "label": "baseline" },
+    { "from": "cjc1295", "to": "orchestrator", "label": "sustained GH" },
+    { "from": "ipamorelin", "to": "orchestrator", "label": "pulsatile GH" },
+    { "from": "igf1lr3", "to": "orchestrator", "label": "IGF-1 signal" },
+    { "from": "orchestrator", "to": "mgf", "label": "post-workout" },
+    { "from": "orchestrator", "to": "follistatin", "label": "myostatin block" },
+    { "from": "orchestrator", "to": "bpc157", "label": "recovery" },
+    { "from": "bpc157", "to": "tb500", "label": "systemic heal" },
+    { "from": "mgf", "to": "timeline", "label": "schedule" },
+    { "from": "follistatin", "to": "timeline", "label": "10-day cycles" },
+    { "from": "tb500", "to": "safety", "label": "monitoring" },
+    { "from": "timeline", "to": "cart", "label": "protocol" },
+    { "from": "safety", "to": "cart", "label": "cleared" }
+  ]
+}

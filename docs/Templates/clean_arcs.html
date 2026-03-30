@@ -1,0 +1,85 @@
+$html = @'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Geodesic Orb</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#0c0e14;font-family:-apple-system,sans-serif}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;padding:48px}
+.row{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
+.cell{display:flex;flex-direction:column;align-items:center;gap:12px}
+.label{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.sub{font-size:9px;letter-spacing:.1em;color:rgba(255,255,255,.15);text-transform:uppercase}
+h1{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+</style>
+</head>
+<body>
+<h1>Geodesic Orb — Node Design Reference</h1>
+<div class="row">
+  <div class="cell"><canvas id="main" width="330" height="330"></canvas><div class="label">Main Orb — CortixCore</div><div class="sub">330px</div></div>
+  <div class="cell"><canvas id="med" width="180" height="180"></canvas><div class="label">Process Orb</div><div class="sub">180px</div></div>
+  <div class="cell"><canvas id="sm" width="120" height="120"></canvas><div class="label">Mini Orb</div><div class="sub">120px</div></div>
+</div>
+<div class="row">
+  <div class="cell"><canvas id="kr" width="180" height="180"></canvas><div class="label">Knowledge Retrieval</div><div class="sub">Searching</div></div>
+  <div class="cell"><canvas id="ca" width="180" height="180"></canvas><div class="label">Context Assembly</div><div class="sub">Preparing</div></div>
+  <div class="cell"><canvas id="ov" width="180" height="180"></canvas><div class="label">Output Validation</div><div class="sub">Checking</div></div>
+</div>
+<script>
+let rot=0,time=0;
+function project(x,y,z,tX,tY){
+  const y2=y*Math.cos(tX)-z*Math.sin(tX),z2=y*Math.sin(tX)+z*Math.cos(tX);
+  const x3=x*Math.cos(tY)+z2*Math.sin(tY),z3=-x*Math.sin(tY)+z2*Math.cos(tY);
+  const s=340/(340+z3*0.35);
+  return{px:x3*s,py:y2*s,z:z3};
+}
+function makeVerts(R,ls,lo){
+  const v=[];
+  for(let lat=-80;lat<=80;lat+=ls)
+    for(let lon=0;lon<360;lon+=lo){
+      const phi=(90-lat)*Math.PI/180,theta=lon*Math.PI/180;
+      v.push({x:R*Math.sin(phi)*Math.cos(theta),y:R*Math.sin(phi)*Math.sin(theta),z:R*Math.cos(phi)});
+    }
+  return v;
+}
+function draw(id,R,tX,tY,ls,lo,pulse){
+  const c=document.getElementById(id),ctx=c.getContext('2d'),W=c.width,cx=W/2,cy=W/2;
+  ctx.clearRect(0,0,W,W);
+  const verts=makeVerts(R,ls,lo),thresh=R*0.75;
+  for(let i=0;i<verts.length;i++)for(let j=i+1;j<verts.length;j++){
+    const dx=verts[i].x-verts[j].x,dy=verts[i].y-verts[j].y,dz=verts[i].z-verts[j].z;
+    if(dx*dx+dy*dy+dz*dz<thresh*thresh){
+      const pa=project(verts[i].x,verts[i].y,verts[i].z,tX,tY),pb=project(verts[j].x,verts[j].y,verts[j].z,tX,tY);
+      const a=0.55*(0.3+(Math.max(pa.z,pb.z)/R+1)*0.5);
+      ctx.beginPath();ctx.moveTo(cx+pa.px,cy+pa.py);ctx.lineTo(cx+pb.px,cy+pb.py);
+      ctx.strokeStyle=`rgba(255,255,255,${a})`;ctx.lineWidth=0.55;ctx.stroke();
+    }
+  }
+  verts.forEach((v,idx)=>{
+    const p=project(v.x,v.y,v.z,tX,tY);
+    let a,sz;
+    if(pulse!==undefined){const pu=0.5+0.5*Math.sin(pulse+idx*0.8);a=0.8*(0.15+pu*0.7*(0.3+(p.z/R+1)*0.4));sz=1.2*(0.8+pu*1.8*(0.5+p.z/R*0.4));}
+    else{a=0.75*(0.2+(p.z/R+1)*0.55);sz=1.2*(0.7+p.z/R*0.5);}
+    ctx.beginPath();ctx.arc(cx+p.px,cy+p.py,Math.max(0.3,sz),0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fill();
+  });
+}
+function loop(){
+  rot+=0.006;time+=0.04;
+  draw('main',130,0.45,rot*0.6,20,30,undefined);
+  draw('med',68,0.45,rot*0.6,20,30,undefined);
+  draw('sm',44,0.45,rot*0.55,25,40,undefined);
+  draw('kr',68,0.45,rot*0.5,20,30,time*0.8);
+  draw('ca',68,0.55,rot*0.65,20,30,time*1.1);
+  draw('ov',68,0.4,rot*0.7,20,30,time*1.4);
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
+'@
+$html | Out-File -FilePath "C:\Developer_main\Projects\react-pdf-flipbook-viewer-master\react-pdf-flipbook-viewer-master\docs\geodesic-orb.html" -Encoding UTF8
+Start-Process "C:\Developer_main\Projects\react-pdf-flipbook-viewer-master\react-pdf-flipbook-viewer-master\docs\geodesic-orb.html"

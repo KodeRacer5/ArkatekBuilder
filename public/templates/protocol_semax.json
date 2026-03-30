@@ -1,0 +1,22 @@
+{
+  "id": "semax",
+  "name": "Semax Protocol Analysis",
+  "components": [
+    { "id": "input_labs", "name": "Patient Neuro Panel", "type": "user", "position": { "x": 50, "y": 200 }, "properties": { "tech_stack": "BDNF, cortisol, cognitive baseline", "description": "Neurological and stress marker baseline" } },
+    { "id": "cx_engine", "name": "CortixEngine", "type": "api_gateway", "position": { "x": 340, "y": 200 }, "properties": { "tech_stack": "ACTH(4-7) analog simulation", "description": "BDNF upregulation and neuroprotection pathway modeling" } },
+    { "id": "dosing", "name": "Intranasal Dosing", "type": "api", "position": { "x": 620, "y": 100 }, "properties": { "tech_stack": "200–600 mcg/day intranasal", "description": "Per-nostril dosing calibration" } },
+    { "id": "cycling", "name": "Cycle Protocol", "type": "api", "position": { "x": 620, "y": 260 }, "properties": { "tech_stack": "2 weeks on / 1 week off", "description": "Tolerance prevention cycling schedule" } },
+    { "id": "stacking", "name": "Selank Synergy", "type": "api", "position": { "x": 900, "y": 100 }, "properties": { "tech_stack": "Cognitive + anxiolytic balance", "description": "Semax (BDNF) + Selank (anxiolytic) dual axis" } },
+    { "id": "contraindications", "name": "Stimulant Screen", "type": "auth_service", "position": { "x": 900, "y": 280 }, "properties": { "tech_stack": "Avoid concurrent stimulants", "description": "Flags caffeine excess, amphetamines, modafinil stacks" } },
+    { "id": "report", "name": "Clinical Report", "type": "file_storage", "position": { "x": 1160, "y": 190 }, "properties": { "tech_stack": "PDF export", "description": "Neuro optimization protocol summary" } }
+  ],
+  "connections": [
+    { "from": "input_labs", "to": "cx_engine", "label": "neuro baseline" },
+    { "from": "cx_engine", "to": "dosing", "label": "calibration" },
+    { "from": "cx_engine", "to": "cycling", "label": "cycle plan" },
+    { "from": "dosing", "to": "stacking", "label": "primary dose" },
+    { "from": "cycling", "to": "contraindications", "label": "timing check" },
+    { "from": "stacking", "to": "report", "label": "stack protocol" },
+    { "from": "contraindications", "to": "report", "label": "safety flags" }
+  ]
+}

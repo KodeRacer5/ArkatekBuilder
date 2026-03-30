@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DREAMS Selector — Right</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  .wrapper { width: 100%; max-width: 780px; padding: 20px; }
+
+  @keyframes si-hex-in { from{opacity:0;transform:scale(0.6)} to{opacity:1;transform:scale(1)} }
+  @keyframes si-ring-in { from{opacity:0;transform:scale(0.75) rotate(-20deg)} to{opacity:1;transform:scale(1) rotate(0deg)} }
+  @keyframes si-pill-in {
+    from { opacity:0; transform:translateX(60px) scaleX(0.7); }
+    to   { opacity:1; transform:translateX(0) scaleX(1); }
+  }
+  @keyframes si-line-in { from{opacity:0;stroke-dashoffset:80} to{opacity:0.85;stroke-dashoffset:0} }
+
+  /* Hub on LEFT — HX=155 HY=350 */
+  .si-hub  { transform-origin:155px 350px; animation:si-hex-in  0.65s cubic-bezier(0.34,1.56,0.64,1) 0.10s both; }
+  .si-ring { transform-origin:155px 350px; animation:si-ring-in 0.80s cubic-bezier(0.34,1.20,0.64,1) 0.05s both; }
+
+  .si-pill-0 { animation:si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.20s both; }
+  .si-pill-1 { animation:si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.27s both; }
+  .si-pill-2 { animation:si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.34s both; }
+  .si-pill-3 { animation:si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.41s both; }
+  .si-pill-4 { animation:si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.48s both; }
+  .si-pill-5 { animation:si-pill-in 0.55s cubic-bezier(0.34,1.4,0.64,1) 0.55s both; }
+
+  .si-line-0 { animation:si-line-in 0.4s ease-out 0.25s both; stroke-dasharray:5 6; }
+  .si-line-1 { animation:si-line-in 0.4s ease-out 0.32s both; stroke-dasharray:5 6; }
+  .si-line-2 { animation:si-line-in 0.4s ease-out 0.39s both; stroke-dasharray:5 6; }
+  .si-line-3 { animation:si-line-in 0.4s ease-out 0.46s both; stroke-dasharray:5 6; }
+  .si-line-4 { animation:si-line-in 0.4s ease-out 0.53s both; stroke-dasharray:5 6; }
+  .si-line-5 { animation:si-line-in 0.4s ease-out 0.60s both; stroke-dasharray:5 6; }
+
+  .pill-group { cursor:pointer; }
+  svg { overflow:visible; display:block; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+<svg viewBox="0 0 780 700" width="100%">
+<defs>
+  <linearGradient id="g0" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fb6b56"/><stop offset="100%" stop-color="#b82010"/></linearGradient>
+  <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#e080b0"/><stop offset="100%" stop-color="#904070"/></linearGradient>
+  <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fcd050"/><stop offset="100%" stop-color="#b88000"/></linearGradient>
+  <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#60d080"/><stop offset="100%" stop-color="#208840"/></linearGradient>
+  <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#50b8b0"/><stop offset="100%" stop-color="#106890"/></linearGradient>
+  <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#c8d850"/><stop offset="100%" stop-color="#789000"/></linearGradient>
+  <radialGradient id="hub" cx="60%" cy="35%" r="65%">
+    <stop offset="0%" stop-color="#1e1e30"/>
+    <stop offset="100%" stop-color="#050510"/>
+  </radialGradient>
+  <filter id="fshadow"><feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="#000" flood-opacity="0.7"/></filter>
+  <filter id="fsoft"><feDropShadow dx="2" dy="5" stdDeviation="10" flood-color="#000" flood-opacity="0.5"/></filter>
+  <filter id="fglow0"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#fb6b56" flood-opacity="0.6"/></filter>
+  <filter id="fglow1"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#e080b0" flood-opacity="0.6"/></filter>
+  <filter id="fglow2"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#fcd050" flood-opacity="0.6"/></filter>
+  <filter id="fglow3"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#60d080" flood-opacity="0.6"/></filter>
+  <filter id="fglow4"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#50b8b0" flood-opacity="0.6"/></filter>
+  <filter id="fglow5"><feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#c8d850" flood-opacity="0.6"/></filter>
+</defs>
+
+<!-- OUTER RING -->
+<circle class="si-ring" cx="155" cy="350" r="310"
+  fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="3 10"/>
+
+<!-- INNER RING -->
+<circle class="si-ring" cx="155" cy="350" r="173"
+  fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="8" stroke-dasharray="4 8"/>
+
+<!-- HUB — LEFT at HX=155 -->
+<g class="si-hub">
+  <circle cx="155" cy="350" r="145" fill="url(#hub)" stroke="rgba(255,255,255,0.12)" stroke-width="2" filter="url(#fshadow)"/>
+  <circle cx="155" cy="350" r="133" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <text x="155" y="316" text-anchor="middle" fill="rgba(255,255,255,0.38)"
+    style="font-size:12px;font-weight:700;letter-spacing:0.24em;">BUSINESS</text>
+  <text x="155" y="352" text-anchor="middle" fill="white"
+    style="font-size:30px;font-weight:900;letter-spacing:0.08em;">DREAMS</text>
+  <text x="155" y="380" text-anchor="middle" fill="rgba(255,255,255,0.85)"
+    style="font-size:18px;font-weight:700;letter-spacing:0.14em;">SCORE</text>
+  <circle cx="117" cy="404" r="5" fill="#fb6b56"/>
+  <circle cx="131" cy="404" r="5" fill="#e080b0"/>
+  <circle cx="145" cy="404" r="5" fill="#fcd050"/>
+  <circle cx="159" cy="404" r="5" fill="#60d080"/>
+  <circle cx="173" cy="404" r="5" fill="#50b8b0"/>
+  <circle cx="187" cy="404" r="5" fill="#c8d850"/>
+</g>
+
+<!-- ─────────────────────────────────────────
+     PILLS — hub LEFT HX=155 HY=350
+     angles: -40 -24 -8 8 24 40
+     nx = 155 + 178*cos(angle)
+     ny = 350 + 178*sin(angle)
+     pcx= 155 + 370*cos(angle)
+     pcy= 350 + 370*sin(angle)
+     connector x2 = px (left edge of pill)
+───────────────────────────────────────── -->
+
+<!-- PILL 0 · D · angle=-40° · nx=291,ny=236 · pcx=438,pcy=112 · px=318 -->
+<g>
+  <line class="si-line-0" x1="291" y1="236" x2="318" y2="112"
+    stroke="#fb6b56" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="291" cy="236" r="6" fill="#fb6b56" opacity="0.9"/>
+  <circle cx="291" cy="236" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-0" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow0)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="318" y="80" width="240" height="64" rx="32" fill="url(#g0)"/>
+    <rect x="350" y="81" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="438" y="105" text-anchor="middle" fill="white" style="font-size:16px;font-weight:900;">Debt Management</text>
+    <text x="438" y="127" text-anchor="middle" fill="rgba(255,255,255,0.72)" style="font-size:10px;letter-spacing:0.07em;">RESTRUCTURE · FUNDING · SBA</text>
+  </g>
+</g>
+
+<!-- PILL 1 · R · angle=-24° · nx=318,ny=278 · pcx=493,pcy=199 · px=373 -->
+<g>
+  <line class="si-line-1" x1="318" y1="278" x2="373" y2="199"
+    stroke="#e080b0" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="318" cy="278" r="6" fill="#e080b0" opacity="0.9"/>
+  <circle cx="318" cy="278" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-1" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow1)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="373" y="167" width="240" height="64" rx="32" fill="url(#g1)"/>
+    <rect x="405" y="168" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="493" y="192" text-anchor="middle" fill="white" style="font-size:16px;font-weight:900;">Retirement &amp; Planning</text>
+    <text x="493" y="214" text-anchor="middle" fill="rgba(255,255,255,0.72)" style="font-size:10px;letter-spacing:0.07em;">401K · IRA · KEY-PERSON</text>
+  </g>
+</g>
+
+<!-- PILL 2 · E · angle=-8° · nx=331,ny=325 · pcx=521,pcy=299 · px=401 -->
+<g>
+  <line class="si-line-2" x1="331" y1="325" x2="401" y2="299"
+    stroke="#fcd050" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="331" cy="325" r="6" fill="#fcd050" opacity="0.9"/>
+  <circle cx="331" cy="325" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-2" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow2)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="401" y="267" width="240" height="64" rx="32" fill="url(#g2)"/>
+    <rect x="433" y="268" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="521" y="292" text-anchor="middle" fill="white" style="font-size:16px;font-weight:900;">Expense Management</text>
+    <text x="521" y="314" text-anchor="middle" fill="rgba(255,255,255,0.72)" style="font-size:10px;letter-spacing:0.07em;">ENERGY · HEALTHCARE · PAYROLL</text>
+  </g>
+</g>
+
+<!-- PILL 3 · A · angle=8° · nx=331,ny=375 · pcx=521,pcy=401 · px=401 -->
+<g>
+  <line class="si-line-3" x1="331" y1="375" x2="401" y2="401"
+    stroke="#60d080" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="331" cy="375" r="6" fill="#60d080" opacity="0.9"/>
+  <circle cx="331" cy="375" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-3" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow3)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="401" y="369" width="240" height="64" rx="32" fill="url(#g3)"/>
+    <rect x="433" y="370" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="521" y="394" text-anchor="middle" fill="white" style="font-size:16px;font-weight:900;">Asset Management</text>
+    <text x="521" y="416" text-anchor="middle" fill="rgba(255,255,255,0.72)" style="font-size:10px;letter-spacing:0.07em;">PROTECT · OPTIMIZE · GROW</text>
+  </g>
+</g>
+
+<!-- PILL 4 · M · angle=24° · nx=318,ny=422 · pcx=493,pcy=501 · px=373 -->
+<g>
+  <line class="si-line-4" x1="318" y1="422" x2="373" y2="501"
+    stroke="#50b8b0" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="318" cy="422" r="6" fill="#50b8b0" opacity="0.9"/>
+  <circle cx="318" cy="422" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-4" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow4)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="373" y="469" width="240" height="64" rx="32" fill="url(#g4)"/>
+    <rect x="405" y="470" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="493" y="494" text-anchor="middle" fill="white" style="font-size:16px;font-weight:900;">Money Management</text>
+    <text x="493" y="516" text-anchor="middle" fill="rgba(255,255,255,0.72)" style="font-size:10px;letter-spacing:0.07em;">CASH FLOW · R&amp;D · CREDITS</text>
+  </g>
+</g>
+
+<!-- PILL 5 · S · angle=40° · nx=291,ny=464 · pcx=438,pcy=588 · px=318 -->
+<g>
+  <line class="si-line-5" x1="291" y1="464" x2="318" y2="588"
+    stroke="#c8d850" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="291" cy="464" r="6" fill="#c8d850" opacity="0.9"/>
+  <circle cx="291" cy="464" r="3" fill="white" opacity="0.6"/>
+  <g class="pill-group si-pill-5" filter="url(#fsoft)"
+     onmouseenter="this.setAttribute('filter','url(#fglow5)')"
+     onmouseleave="this.setAttribute('filter','url(#fsoft)')">
+    <rect x="318" y="556" width="240" height="64" rx="32" fill="url(#g5)"/>
+    <rect x="350" y="557" width="176" height="2" fill="rgba(255,255,255,0.22)" rx="1"/>
+    <text x="438" y="581" text-anchor="middle" fill="white" style="font-size:16px;font-weight:900;">Security &amp; Succession</text>
+    <text x="438" y="603" text-anchor="middle" fill="rgba(255,255,255,0.72)" style="font-size:10px;letter-spacing:0.07em;">CYBER · COMPLIANCE · RISK</text>
+  </g>
+</g>
+
+</svg>
+</div>
+</body>
+</html>

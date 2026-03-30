@@ -1,0 +1,23 @@
+{
+  "id": "ghk_cu",
+  "name": "GHK-Cu Protocol Analysis",
+  "components": [
+    { "id": "input_labs", "name": "Patient Profile", "type": "user", "position": { "x": 50, "y": 200 }, "properties": { "tech_stack": "Collagen markers, skin/hair assessment, age", "description": "Longevity and tissue baseline markers" } },
+    { "id": "cx_engine", "name": "CortixEngine", "type": "api_gateway", "position": { "x": 340, "y": 200 }, "properties": { "tech_stack": "Copper peptide simulation", "description": "Collagen synthesis and wound healing pathway modeling" } },
+    { "id": "route_sc", "name": "Subcutaneous Route", "type": "api", "position": { "x": 620, "y": 80 }, "properties": { "tech_stack": "1–2 mg/day SC injection", "description": "Systemic anti-aging and longevity protocol" } },
+    { "id": "route_topical", "name": "Topical Route", "type": "api", "position": { "x": 620, "y": 200 }, "properties": { "tech_stack": "1–3% topical concentration", "description": "Skin and hair follicle regeneration" } },
+    { "id": "stacking", "name": "Longevity Stack", "type": "api", "position": { "x": 620, "y": 320 }, "properties": { "tech_stack": "BPC-157 + NAD+ precursors", "description": "Tissue repair + cellular energy synergy" } },
+    { "id": "dosing_guard", "name": "Dose Limiter", "type": "auth_service", "position": { "x": 900, "y": 140 }, "properties": { "tech_stack": "Less is more — cap at 2mg/day", "description": "Flags overdosing — higher doses counterproductive" } },
+    { "id": "report", "name": "Clinical Report", "type": "file_storage", "position": { "x": 1160, "y": 200 }, "properties": { "tech_stack": "PDF export", "description": "Longevity protocol with route selection and stack plan" } }
+  ],
+  "connections": [
+    { "from": "input_labs", "to": "cx_engine", "label": "baseline" },
+    { "from": "cx_engine", "to": "route_sc", "label": "systemic" },
+    { "from": "cx_engine", "to": "route_topical", "label": "topical" },
+    { "from": "cx_engine", "to": "stacking", "label": "stack candidates" },
+    { "from": "route_sc", "to": "dosing_guard", "label": "dose check" },
+    { "from": "stacking", "to": "dosing_guard", "label": "interaction check" },
+    { "from": "dosing_guard", "to": "report", "label": "safe protocol" },
+    { "from": "route_topical", "to": "report", "label": "topical plan" }
+  ]
+}

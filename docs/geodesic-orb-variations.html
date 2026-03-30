@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Geodesic Orb Variations</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;background:#0c0e14;font-family:-apple-system,sans-serif}
+body{display:flex;flex-direction:column;align-items:center;padding:48px;gap:40px}
+h1{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+.grid{display:grid;grid-template-columns:repeat(3,200px);gap:40px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:10px}
+.label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:center}
+.sub{font-size:8px;letter-spacing:.1em;color:rgba(255,255,255,.15);text-transform:uppercase;text-align:center}
+</style>
+</head>
+<body>
+<h1>Geodesic Orb — All Variations</h1>
+<div class="grid">
+  <div class="cell"><canvas id="g1" width="200" height="200"></canvas><div class="label">Original</div><div class="sub">Clean arcs</div></div>
+  <div class="cell"><canvas id="g2" width="200" height="200"></canvas><div class="label">Icosahedron</div><div class="sub">Subdivided</div></div>
+  <div class="cell"><canvas id="g3" width="200" height="200"></canvas><div class="label">Dense grid</div><div class="sub">Glow nodes</div></div>
+  <div class="cell"><canvas id="g4" width="200" height="200"></canvas><div class="label">Pulse</div><div class="sub">Nodes light up</div></div>
+  <div class="cell"><canvas id="g5" width="200" height="200"></canvas><div class="label">Sparse</div><div class="sub">Minimal lines</div></div>
+  <div class="cell"><canvas id="g6" width="200" height="200"></canvas><div class="label">Two-layer nested</div><div class="sub">Counter-rotating</div></div>
+</div>
+<script>
+let rot=0,time=0;
+
+function proj(x,y,z,tX,tY){
+  const y2=y*Math.cos(tX)-z*Math.sin(tX),z2=y*Math.sin(tX)+z*Math.cos(tX);
+  const x3=x*Math.cos(tY)+z2*Math.sin(tY),z3=-x*Math.sin(tY)+z2*Math.cos(tY);
+  const s=340/(340+z3*0.35);
+  return{px:x3*s,py:y2*s,z:z3};
+}
+
+function latLon(R,ls,lo){
+  const v=[];
+  for(let lat=-80;lat<=80;lat+=ls)
+    for(let lon=0;lon<360;lon+=lo){
+      const phi=(90-lat)*Math.PI/180,th=lon*Math.PI/180;
+      v.push({x:R*Math.sin(phi)*Math.cos(th),y:R*Math.sin(phi)*Math.sin(th),z:R*Math.cos(phi)});
+    }
+  return v;
+}
+
+function icoV(R){
+  const ph=(1+Math.sqrt(5))/2;
+  const b=[[0,1,ph],[0,-1,ph],[0,1,-ph],[0,-1,-ph],[1,ph,0],[-1,ph,0],[1,-ph,0],[-1,-ph,0],[ph,0,1],[-ph,0,1],[ph,0,-1],[-ph,0,-1]];
+  const v=b.map(([x,y,z])=>{const n=Math.sqrt(x*x+y*y+z*z);return{x:x/n*R,y:y/n*R,z:z/n*R}});
+  const s=[];
+  for(let i=0;i<v.length;i++)for(let j=i+1;j<v.length;j++){
+    const m={x:(v[i].x+v[j].x)/2,y:(v[i].y+v[j].y)/2,z:(v[i].z+v[j].z)/2};
+    const n=Math.sqrt(m.x*m.x+m.y*m.y+m.z*m.z);
+    if(n>0)s.push({x:m.x/n*R,y:m.y/n*R,z:m.z/n*R});
+  }
+  return[...v,...s];
+}
+
+function drawE(ctx,verts,R,tX,tY,cx,cy,thresh,ea){
+  for(let i=0;i<verts.length;i++)for(let j=i+1;j<verts.length;j++){
+    const dx=verts[i].x-verts[j].x,dy=verts[i].y-verts[j].y,dz=verts[i].z-verts[j].z;
+    if(dx*dx+dy*dy+dz*dz<thresh*thresh){
+      const pa=proj(verts[i].x,verts[i].y,verts[i].z,tX,tY);
+      const pb=proj(verts[j].x,verts[j].y,verts[j].z,tX,tY);
+      const a=ea*(0.3+(Math.max(pa.z,pb.z)/R+1)*0.5);
+      ctx.beginPath();ctx.moveTo(cx+pa.px,cy+pa.py);ctx.lineTo(cx+pb.px,cy+pb.py);
+      ctx.strokeStyle=`rgba(255,255,255,${a})`;ctx.lineWidth=0.55;ctx.stroke();
+    }
+  }
+}
+
+function drawN(ctx,verts,R,tX,tY,cx,cy,nsz,na,pt){
+  verts.forEach((v,idx)=>{
+    const p=proj(v.x,v.y,v.z,tX,tY);
+    let a,sz;
+    if(pt!==undefined){
+      const pu=0.5+0.5*Math.sin(pt+idx*0.8);
+      a=na*(0.15+pu*0.7*(0.3+(p.z/R+1)*0.4));
+      sz=nsz*(0.8+pu*2.0*(0.5+p.z/R*0.4));
+    }else{
+      a=na*(0.2+(p.z/R+1)*0.55);
+      sz=nsz*(0.7+p.z/R*0.5);
+    }
+    ctx.beginPath();ctx.arc(cx+p.px,cy+p.py,Math.max(0.3,sz),0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fill();
+  });
+}
+
+function clr(id){
+  const c=document.getElementById(id),ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  return{ctx,cx:c.width/2,cy:c.height/2};
+}
+
+function g1(r){const{ctx,cx,cy}=clr('g1'),R=80,v=latLon(R,20,30);drawE(ctx,v,R,0.45,r*0.6,cx,cy,R*0.75,0.55);drawN(ctx,v,R,0.45,r*0.6,cx,cy,1.4,0.75);}
+function g2(r){const{ctx,cx,cy}=clr('g2'),R=80,v=icoV(R);drawE(ctx,v,R,0.45,r*0.5,cx,cy,R*0.85,0.5);drawN(ctx,v,R,0.45,r*0.5,cx,cy,1.3,0.85);}
+function g3(r){const{ctx,cx,cy}=clr('g3'),R=80,v=latLon(R,15,20);drawE(ctx,v,R,0.5,r*0.55,cx,cy,R*0.7,0.4);drawN(ctx,v,R,0.5,r*0.55,cx,cy,2.4,0.9);}
+function g4(r,t){const{ctx,cx,cy}=clr('g4'),R=80,v=latLon(R,20,30);drawE(ctx,v,R,0.45,r*0.6,cx,cy,R*0.75,0.28);drawN(ctx,v,R,0.45,r*0.6,cx,cy,1.4,0.95,t*2);}
+function g5(r){const{ctx,cx,cy}=clr('g5'),R=80,v=latLon(R,30,45);drawE(ctx,v,R,0.45,r*0.5,cx,cy,R*1.1,0.45);drawN(ctx,v,R,0.45,r*0.5,cx,cy,2.6,0.85);}
+function g6(r){
+  const{ctx,cx,cy}=clr('g6');
+  const layers=[[80,0.45,r*0.6,20,30,R=>R*0.75,0.4,1.2],[48,0.55,-r*0.4,25,40,R=>R*0.85,0.7,1.8]];
+  layers.forEach(([R,tX,tY,ls,lo,tf,ea,ns])=>{
+    const v=latLon(R,ls,lo);
+    drawE(ctx,v,R,tX,tY,cx,cy,tf(R),ea);
+    drawN(ctx,v,R,tX,tY,cx,cy,ns,0.85);
+  });
+}
+
+function loop(){
+  rot+=0.006;time+=0.04;
+  g1(rot);g2(rot);g3(rot);g4(rot,time);g5(rot);g6(rot);
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>

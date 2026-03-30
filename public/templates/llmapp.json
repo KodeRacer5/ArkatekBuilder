@@ -1,0 +1,28 @@
+{
+  "name": "Architecture Diagram",
+  "description": "Generated architecture diagram",
+  "components": [
+    { "id": "user", "type": "user", "name": "User", "position": { "x": -270, "y": 690 }, "properties": { "tech_stack": "Browser / Mobile App", "description": "End-user submitting queries through UI" } },
+    { "id": "frontend-ui", "type": "frontend", "name": "LLM Web UI", "position": { "x": -270, "y": 0 }, "properties": { "tech_stack": "Next.js / Vite / React", "description": "Frontend interface for user interaction" } },
+    { "id": "api-gateway", "type": "api_gateway", "name": "API Gateway", "position": { "x": 465, "y": 480 }, "properties": { "tech_stack": "Express Gateway / Kong", "description": "Routes user requests to inference or search" } },
+    { "id": "inference-api", "type": "api", "name": "LLM Inference API", "position": { "x": 60, "y": 1020 }, "properties": { "tech_stack": "FastAPI / LangChain", "description": "Handles user prompts and orchestrates LLM responses" } },
+    { "id": "embedding-worker", "type": "queue_worker", "name": "Embedding Queue Worker", "position": { "x": 1755, "y": 1035 }, "properties": { "tech_stack": "Celery / BullMQ", "description": "Background job for text/vector embeddings" } },
+    { "id": "vector-store", "type": "database", "name": "Vector Database", "position": { "x": 2220, "y": 480 }, "properties": { "tech_stack": "Pinecone / Qdrant / Weaviate", "description": "Stores vector embeddings for similarity search" } },
+    { "id": "llm-provider", "type": "third_party", "name": "LLM Provider", "position": { "x": 2025, "y": -30 }, "properties": { "tech_stack": "OpenAI / Gemini / Claude", "description": "External LLM for generating responses" } },
+    { "id": "file-storage", "type": "file_storage", "name": "Document Storage", "position": { "x": 2790, "y": 90 }, "properties": { "tech_stack": "S3 / GCS", "description": "Stores uploaded files or knowledge docs" } },
+    { "id": "logging-service", "type": "logging", "name": "Logging Service", "position": { "x": 1452, "y": 12 }, "properties": { "tech_stack": "ELK / Loki", "description": "Logs queries, responses, errors, and metrics" } },
+    { "id": "analytics-service", "type": "analytics", "name": "Analytics Service", "position": { "x": 972, "y": 12 }, "properties": { "tech_stack": "Mixpanel / PostHog", "description": "Tracks usage patterns and feature adoption" } }
+  ],
+  "connections": [
+    { "from": "user", "to": "frontend-ui", "type": "direct", "label": "UI Interaction" },
+    { "from": "frontend-ui", "to": "api-gateway", "type": "direct", "label": "User Query" },
+    { "from": "api-gateway", "to": "inference-api", "type": "direct", "label": "Prompt Handling" },
+    { "from": "api-gateway", "to": "embedding-worker", "type": "direct", "label": "Document Upload" },
+    { "from": "inference-api", "to": "vector-store", "type": "direct", "label": "Semantic Search" },
+    { "from": "inference-api", "to": "llm-provider", "type": "direct", "label": "Generate Answer" },
+    { "from": "embedding-worker", "to": "file-storage", "type": "direct", "label": "Store Source Docs" },
+    { "from": "embedding-worker", "to": "vector-store", "type": "direct", "label": "Push Embeddings" },
+    { "from": "api-gateway", "to": "logging-service", "type": "direct", "label": "Log Request" },
+    { "from": "frontend-ui", "to": "analytics-service", "type": "direct", "label": "Track Usage" }
+  ]
+}

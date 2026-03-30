@@ -1,0 +1,22 @@
+.card-swap-container {
+  position: relative;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 16px;
+  background: rgba(30,35,45,0.82);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  cursor: pointer;
+  padding: 32px;
+  box-sizing: border-box;
+  color: rgba(255,255,255,0.9);
+  font-family: -apple-system, system-ui, sans-serif;
+}

@@ -1,0 +1,167 @@
+{
+  "engine_version": "1.0.0",
+  "triads": [
+    {
+      "id": "energy",
+      "label": "Energy",
+      "weights": {
+        "lab_mode": { "symptoms": 0.4, "vitals": 0.2, "labs": 0.4 },
+        "non_lab_mode": { "symptoms": 0.6, "vitals": 0.4 }
+      },
+      "symptom_items": [
+        "sym_energy_fatigue_morning",
+        "sym_energy_midday_crash",
+        "sym_energy_weight_gain",
+        "sym_energy_sugar_cravings",
+        "sym_energy_cold_intolerance",
+        "sym_energy_sleep_poor"
+      ],
+      "vitals_fields": ["bmi", "waist_to_height_ratio", "resting_hr_bpm"],
+      "lab_fields": [
+        "fasting_glucose_mg_dl",
+        "fasting_insulin_uIU_ml",
+        "hba1c_pct",
+        "triglycerides_mg_dl",
+        "hdl_mg_dl",
+        "tsh_uIU_ml",
+        "free_t3_pg_ml",
+        "free_t4_ng_dl",
+        "vitamin_d_25oh_ng_ml"
+      ]
+    },
+    {
+      "id": "resiliency",
+      "label": "Resiliency",
+      "weights": {
+        "lab_mode": { "symptoms": 0.5, "vitals": 0.1, "labs": 0.4 },
+        "non_lab_mode": { "symptoms": 0.8, "vitals": 0.2 }
+      },
+      "symptom_items": [
+        "sym_resiliency_bloating",
+        "sym_resiliency_heartburn",
+        "sym_resiliency_alter_bowel",
+        "sym_resiliency_frequent_illness",
+        "sym_resiliency_brain_fog",
+        "sym_resiliency_anxiety"
+      ],
+      "vitals_fields": [],
+      "lab_fields": [
+        "hs_crp_mg_l",
+        "vitamin_d_25oh_ng_ml",
+        "homocysteine_umol_l",
+        "ferritin_ng_ml"
+      ]
+    },
+    {
+      "id": "endurance",
+      "label": "Endurance",
+      "weights": {
+        "lab_mode": { "symptoms": 0.4, "vitals": 0.3, "labs": 0.3 },
+        "non_lab_mode": { "symptoms": 0.5, "vitals": 0.5 }
+      },
+      "symptom_items": [
+        "sym_endurance_exertion_dyspnea",
+        "sym_endurance_chest_tightness",
+        "sym_endurance_poor_exercise_tolerance",
+        "sym_endurance_palpitations"
+      ],
+      "vitals_fields": [
+        "systolic_bp_mm_hg",
+        "diastolic_bp_mm_hg",
+        "resting_hr_bpm"
+      ],
+      "lab_fields": [
+        "ldl_c_mg_dl",
+        "triglycerides_mg_dl",
+        "hdl_mg_dl",
+        "hs_crp_mg_l"
+      ]
+    },
+    {
+      "id": "detox",
+      "label": "Detoxification",
+      "weights": {
+        "lab_mode": { "symptoms": 0.4, "vitals": 0.3, "labs": 0.3 },
+        "non_lab_mode": { "symptoms": 0.7, "vitals": 0.3 }
+      },
+      "symptom_items": [
+        "sym_detox_chemical_sensitivity",
+        "sym_detox_fluid_retention",
+        "sym_detox_headache",
+        "sym_detox_skin_rash"
+      ],
+      "vitals_fields": ["urine_ph"],
+      "lab_fields": [
+        "alt_u_l",
+        "ast_u_l",
+        "ggt_u_l",
+        "bilirubin_mg_dl",
+        "bun_mg_dl",
+        "creatinine_mg_dl",
+        "egfr_ml_min_1_73m2",
+        "uric_acid_mg_dl"
+      ]
+    },
+    {
+      "id": "potency",
+      "label": "Potency",
+      "weights": {
+        "lab_mode": { "symptoms": 0.4, "vitals": 0.2, "labs": 0.4 },
+        "non_lab_mode": { "symptoms": 0.7, "vitals": 0.3 }
+      },
+      "symptom_items": [
+        "sym_potency_low_libido",
+        "sym_potency_erection_or_cycle",
+        "sym_potency_mood_irritability",
+        "sym_potency_hot_flashes",
+        "sym_potency_muscle_loss"
+      ],
+      "vitals_fields": ["bmi", "waist_to_height_ratio"],
+      "lab_fields": [
+        "total_testosterone_ng_dl",
+        "free_testosterone_pg_ml",
+        "estradiol_pg_ml",
+        "dhea_s_ug_dl"
+      ]
+    }
+  ],
+  "risk_bands": {
+    "low_max": 33,
+    "moderate_max": 66
+  },
+  "vitals_ranges": {
+    "bmi": { "optimal_low": 20.0, "optimal_high": 24.9, "direction": "high_bad" },
+    "waist_to_height_ratio": { "optimal_low": 0.4, "optimal_high": 0.5, "direction": "high_bad" },
+    "resting_hr_bpm": { "optimal_low": 55, "optimal_high": 70, "direction": "both_bad" },
+    "systolic_bp_mm_hg": { "optimal_low": 100, "optimal_high": 120, "direction": "high_bad" },
+    "diastolic_bp_mm_hg": { "optimal_low": 60, "optimal_high": 80, "direction": "high_bad" },
+    "urine_ph": { "optimal_low": 6.2, "optimal_high": 7.0, "direction": "both_bad" }
+  },
+  "lab_ranges": {
+    "fasting_glucose_mg_dl": { "optimal_low": 80, "optimal_high": 90, "direction": "high_bad" },
+    "fasting_insulin_uIU_ml": { "optimal_low": 3, "optimal_high": 8, "direction": "high_bad" },
+    "hba1c_pct": { "optimal_low": 4.8, "optimal_high": 5.3, "direction": "high_bad" },
+    "triglycerides_mg_dl": { "optimal_low": 50, "optimal_high": 100, "direction": "high_bad" },
+    "hdl_mg_dl": { "optimal_low": 50, "optimal_high": 80, "direction": "low_bad" },
+    "ldl_c_mg_dl": { "optimal_low": 60, "optimal_high": 99, "direction": "high_bad" },
+    "hs_crp_mg_l": { "optimal_low": 0.1, "optimal_high": 1.0, "direction": "high_bad" },
+    "tsh_uIU_ml": { "optimal_low": 0.5, "optimal_high": 2.0, "direction": "both_bad" },
+    "free_t3_pg_ml": { "optimal_low": 3.0, "optimal_high": 3.8, "direction": "low_bad" },
+    "free_t4_ng_dl": { "optimal_low": 1.0, "optimal_high": 1.4, "direction": "low_bad" },
+    "vitamin_d_25oh_ng_ml": { "optimal_low": 40, "optimal_high": 60, "direction": "low_bad" },
+    "homocysteine_umol_l": { "optimal_low": 5, "optimal_high": 9, "direction": "high_bad" },
+    "ferritin_ng_ml": { "optimal_low": 40, "optimal_high": 150, "direction": "both_bad" },
+    "alt_u_l": { "optimal_low": 8, "optimal_high": 25, "direction": "high_bad" },
+    "ast_u_l": { "optimal_low": 10, "optimal_high": 25, "direction": "high_bad" },
+    "ggt_u_l": { "optimal_low": 10, "optimal_high": 35, "direction": "high_bad" },
+    "bilirubin_mg_dl": { "optimal_low": 0.3, "optimal_high": 1.0, "direction": "both_bad" },
+    "bun_mg_dl": { "optimal_low": 8, "optimal_high": 20, "direction": "both_bad" },
+    "creatinine_mg_dl": { "optimal_low": 0.7, "optimal_high": 1.2, "direction": "both_bad" },
+    "egfr_ml_min_1_73m2": { "optimal_low": 90, "optimal_high": 120, "direction": "low_bad" },
+    "uric_acid_mg_dl": { "optimal_low": 3.5, "optimal_high": 6.0, "direction": "both_bad" },
+    "total_testosterone_ng_dl": { "optimal_low": 600, "optimal_high": 900, "direction": "low_bad" },
+    "free_testosterone_pg_ml": { "optimal_low": 12, "optimal_high": 25, "direction": "low_bad" },
+    "estradiol_pg_ml": { "optimal_low": 15, "optimal_high": 30, "direction": "both_bad" },
+    "dhea_s_ug_dl": { "optimal_low": 200, "optimal_high": 350, "direction": "low_bad" }
+  }
+}
